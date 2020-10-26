@@ -1,0 +1,72 @@
+Sub Main()
+
+Application.DisplayAlerts = False
+Dim myFile As String
+wb = ActiveWorkbook.Name
+Sheets("Sheet1").Select
+ Lst = Range("A9000").End(xlUp).Row
+ If Lst > 1 Then
+
+    Range("A2:R" & Lst).Select
+    Selection.ClearContents
+   Else
+    
+    End If
+ 
+Dim Filepath As String
+Filepath = "C:\Users\punniloh\Desktop\BO\week no.46\"
+Application.ScreenUpdating = False
+myFile = Dir(Filepath)
+Do While Len(myFile) > 0
+
+
+Workbooks.Open (Filepath & myFile)
+Worksheets("Sheet1").Activate
+
+Range("A1").Select
+    Application.CutCopyMode = False
+  
+    Lst = Range("A9000").End(xlUp).Row
+    Range("A3:R" & Lst).Select
+    Selection.Copy
+  
+Application.DisplayAlerts = False
+ActiveWorkbook.Close Save = False
+Application.DisplayAlerts = False
+Windows(wb).Activate
+Sheets(1).Select
+   Lst = Range("A9000").End(xlUp).Row
+   er = Lst + 1
+Range("A" & er).Select
+ActiveSheet.Paste
+
+Application.CutCopyMode = False
+
+myFile = Dir
+Loop
+
+
+
+ActiveWorkbook.Save
+
+Range("I2").Select
+ActiveCell.FormulaR1C1 = "=(RC[-3]-RC[-1])*RC[-4]"
+    Range("I2").Select
+    Selection.Copy
+    
+    Range("I2:I" & Lst).Select
+    ActiveSheet.Paste
+    Range("I2:I" & Lst).Select
+    
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+        Sheets("Sheet1").Select
+    Sheets("Sheet1").Copy
+    Windows("macrouppv.xlsm").Activate
+    
+    
+Application.ScreenUpdating = True
+
+End Sub

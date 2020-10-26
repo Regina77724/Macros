@@ -1,0 +1,60 @@
+
+'requires reference to Microsoft Scripting Runtime
+Sub MakeFolder()
+
+Dim strComp As String, strPart As String, strPath As String
+
+strComp = Range("A1") ' assumes company name in A1
+strPart = CleanName(Range("C1")) ' assumes part in C1
+strPath = "C:\Images\"
+
+If Not FolderExists(strPath & strComp) Then
+'company doesn't exist, so create full path
+    FolderCreate strPath & strComp & "\" & strPart
+Else
+'company does exist, but does part folder
+    If Not FolderExists(strPath & strComp & "\" & strPart) Then
+        FolderCreate strPath & strComp & "\" & strPart
+    End If
+End If
+
+End Sub
+
+Function FolderCreate(ByVal path As String) As Boolean
+
+FolderCreate = True
+Dim fso As New FileSystemObject
+
+If Functions.FolderExists(path) Then
+    Exit Function
+Else
+    On Error GoTo DeadInTheWater
+    fso.CreateFolder path ' could there be any error with this, like if the path is really screwed up?
+    Exit Function
+End If
+
+DeadInTheWater:
+    MsgBox "A folder could not be created for the following path: " & path & ". Check the path name and try again."
+    FolderCreate = False
+    Exit Function
+
+End Function
+
+Function FolderExists(ByVal path As String) As Boolean
+
+FolderExists = False
+Dim fso As New FileSystemObject
+
+If fso.FolderExists(path) Then FolderExists = True
+
+End Function
+
+Function CleanName(strName As String) As String
+'will clean part # name so it can be made into valid folder name
+'may need to add more lines to get rid of other characters
+
+    CleanName = Replace(strName, "/", "")
+    CleanName = Replace(CleanName, "*", "")
+    'etc...
+
+End Function

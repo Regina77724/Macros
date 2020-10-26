@@ -1,0 +1,293 @@
+Sub Process()
+
+
+wb = ActiveWorkbook.Name
+
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+Namrata = Time
+Windows(wb).Activate
+Sheets("Freight Details").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 2 Then
+Range("A2:BZ" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+Sheets("Summary").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 2 Then
+Range("A2:BZ" & er).Select
+Selection.Delete
+
+End If
+Cells(1, 1).Select
+
+
+Sheets("Main").Select
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+MsgBox "Please Select Freight Details File Saved In Your System"
+
+varfile = Application.GetOpenFilename
+If varfile = "False" Then
+Sheets("Main").Select
+
+MsgBox "User Canceled the required Action"
+
+Exit Sub
+End If
+
+Workbooks.Open varfile
+
+st = Len(varfile)
+    S = 0
+    MyPos = 0
+    SearchString = varfile
+    SearchChar = "\"
+    cnt = 0
+
+Do While S <= st
+    MyPos = InStr(1, SearchString, SearchChar, 1)
+    If MyPos <> 0 Then
+    remchar = Mid(SearchString, MyPos + 1, st)
+    SearchString = remchar
+    S = S + MyPos
+    Else
+    GoTo nxt:
+    End If
+Loop
+
+nxt:
+        dirpathlen = Len(varfile) - Len(SearchString)
+        Path = Mid(varfile, 1, dirpathlen)
+
+wb1 = ActiveWorkbook.Name
+Sheets("Freight Details").Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+Range("A2:BZ" & er).Select
+
+ Selection.Copy
+ 
+ Windows(wb).Activate
+Sheets("Freight Details").Select
+Range("A2").Select
+ActiveSheet.Paste
+Application.CutCopyMode = False
+Windows(wb1).Close
+
+
+''''''''''''''''''
+Sheets("Freight Details").Select
+Lst = Range("A9000").End(xlUp).Row
+
+ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:= _
+        "Freight Details!R1C1:R" & Lst & "C26", Version:=6).CreatePivotTable _
+        TableDestination:="Summary!R2C1", TableName:="PivotTable3", DefaultVersion _
+        :=6
+    Sheets("Summary").Select
+    Cells(2, 1).Select
+    With ActiveSheet.PivotTables("PivotTable3")
+        .ColumnGrand = True
+        .HasAutoFormat = True
+        .DisplayErrorString = False
+        .DisplayNullString = True
+        .EnableDrilldown = True
+        .ErrorString = ""
+        .MergeLabels = False
+        .NullString = ""
+        .PageFieldOrder = 2
+        .PageFieldWrapCount = 0
+        .PreserveFormatting = True
+        .RowGrand = True
+        .SaveData = True
+        .PrintTitles = False
+        .RepeatItemsOnEachPrintedPage = True
+        .TotalsAnnotation = False
+        .CompactRowIndent = 1
+        .InGridDropZones = False
+        .DisplayFieldCaptions = True
+        .DisplayMemberPropertyTooltips = False
+        .DisplayContextTooltips = True
+        .ShowDrillIndicators = True
+        .PrintDrillIndicators = False
+        .AllowMultipleFilters = False
+        .SortUsingCustomLists = True
+        .FieldListSortAscending = False
+        .ShowValuesRow = False
+        .CalculatedMembersInFilters = False
+        .RowAxisLayout xlCompactRow
+    End With
+    With ActiveSheet.PivotTables("PivotTable3").PivotCache
+        .RefreshOnFileOpen = False
+        .MissingItemsLimit = xlMissingItemsDefault
+    End With
+    ActiveSheet.PivotTables("PivotTable3").RepeatAllLabels xlRepeatLabels
+    With ActiveSheet.PivotTables("PivotTable3").PivotFields("Transport_Type")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+'    ActiveSheet.PivotTables("PivotTable3").AddDataField ActiveSheet.PivotTables( _
+'        "PivotTable3").PivotFields("Transport_Subtype"), "Count of Transport_Subtype", _
+'        xlCount
+'''    With ActiveSheet.PivotTables("PivotTable3").PivotFields( _
+'''        "Count of Transport_Subtype")
+'''        .Orientation = xlColumnField
+'''        .Position = 1
+''    End With
+    With ActiveSheet.PivotTables("PivotTable3").PivotFields("Transport_Subtype")
+        .Orientation = xlRowField
+        .Position = 2
+    End With
+    ActiveSheet.PivotTables("PivotTable3").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable3").PivotFields("Freight_Transp_Cost"), "Sum of Freight_Transp_Cost" _
+        , xlSum
+    ActiveSheet.PivotTables("PivotTable3").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable3").PivotFields("Freight_ChargblWeight"), _
+        "Sum of Freight_ChargblWeight", xlSum
+    With ActiveSheet.PivotTables("PivotTable3")
+        .InGridDropZones = True
+        .RowAxisLayout xlTabularRow
+    End With
+    Cells.Select
+    
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+ 
+    Sheets("Summary").Select
+er = Range("A9000").End(xlUp).Row
+
+    Rows("3:3").Select
+    Selection.AutoFilter
+    ActiveSheet.Range("A3:D" & er).AutoFilter Field:=1, Criteria1:="=*total*" _
+        , Operator:=xlAnd
+    Range("A3:D" & er).Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    Selection.Borders(xlInsideVertical).LineStyle = xlNone
+    Selection.Borders(xlInsideHorizontal).LineStyle = xlNone
+    ep = er - 1
+    Range("A" & ep & ":D" & ep).Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    Selection.Borders(xlInsideVertical).LineStyle = xlNone
+    Selection.Borders(xlInsideHorizontal).LineStyle = xlNone
+    Range("B" & er).Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    Selection.Borders(xlInsideVertical).LineStyle = xlNone
+    Selection.Borders(xlInsideHorizontal).LineStyle = xlNone
+    Range("A3:D" & er).Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    Range("A3:D" & er).Select
+    Selection.Font.Bold = True
+    Selection.AutoFilter
+    Sheets(Array("Summary", "Freight Details")).Select
+  
+    Sheets(Array("Summary", "Freight Details")).Copy
+    
+    
+ MsgBox "Macro Completed And Final Report Generated in New Excel and Total Time Taken " & Format(Time - Namrata, "HH:MM:SS"), vbInformation, "Timer!"
+End Sub

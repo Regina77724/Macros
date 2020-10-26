@@ -1,0 +1,180 @@
+Sub Process()
+
+wb = ActiveWorkbook.Name
+
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+Namrata = Time
+Sheets("Cargo Partner").Select
+Dim myValue As Variant
+myValue = InputBox("Enter month and Quater in Format as Example Nov Q3 FY19 (Nov 2018)")
+Range("A1:O1").Select
+ActiveCell.FormulaR1C1 = "Cargo Partner " & myValue & "-ocean freight "
+
+Sheets("Cargo In").Select
+Range("A1:O1").Select
+ActiveCell.FormulaR1C1 = "Cargo Partner " & myValue & "-ocean freight "
+
+
+Sheets("Cargo Out").Select
+Range("A1:O1").Select
+ActiveCell.FormulaR1C1 = "Cargo Partner " & myValue & "-ocean freight "
+Sheets("Cargo Partner").Select
+Range("A5").Select
+myWk1 = InputBox("Enter 1st week")
+ActiveCell.FormulaR1C1 = "wk" & myWk1
+Range("A6").Select
+myWk2 = InputBox("Enter 2nd week")
+ActiveCell.FormulaR1C1 = "wk" & myWk2
+Range("A7").Select
+myWk3 = InputBox("Enter 3rd week")
+ActiveCell.FormulaR1C1 = "wk" & myWk3
+Range("A8").Select
+myWk4 = InputBox("Enter 4th week")
+ActiveCell.FormulaR1C1 = "wk" & myWk4
+Range("A9").Select
+myWk5 = InputBox("Enter 5th week")
+ActiveCell.FormulaR1C1 = "wk" & myWk5
+
+    
+Windows(wb).Activate
+Sheets("RawInput").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 3 Then
+Range("A2:AO" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+Sheets("Cargo Rep IN").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 3 Then
+Range("A2:AO" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+Sheets("Cargo Rep Out").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 3 Then
+Range("A2:AO" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+Sheets("Main").Select
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+MsgBox "Please Select OTD File Saved In Your System"
+
+varfile = Application.GetOpenFilename
+If varfile = "False" Then
+Sheets("Main").Select
+
+MsgBox "User Canceled the required Action"
+
+Exit Sub
+End If
+
+Workbooks.Open varfile
+
+st = Len(varfile)
+    S = 0
+    MyPos = 0
+    SearchString = varfile
+    SearchChar = "\"
+    cnt = 0
+
+Do While S <= st
+    MyPos = InStr(1, SearchString, SearchChar, 1)
+    If MyPos <> 0 Then
+    remchar = Mid(SearchString, MyPos + 1, st)
+    SearchString = remchar
+    S = S + MyPos
+    Else
+    GoTo nxt:
+    End If
+Loop
+
+nxt:
+        dirpathlen = Len(varfile) - Len(SearchString)
+        Path = Mid(varfile, 1, dirpathlen)
+
+wb1 = ActiveWorkbook.Name
+Sheets("Cargo Partner").Select
+
+er = Cells(Rows.Count, 2).End(xlUp).Row
+Range("A2:AN" & er).Select
+Selection.Copy
+ Windows(wb).Activate
+ Sheets("RawInput").Select
+Range("A2").Select
+ Selection.PasteSpecial Paste:=xlPasteValuesAndNumberFormats, Operation:= _
+        xlNone, SkipBlanks:=False, Transpose:=False
+        Application.CutCopyMode = False
+Windows(wb1).Close
+
+Sheets("RawInput").Select
+Lst = Cells(Rows.Count, 2).End(xlUp).Row
+
+Set rngHeaders = Range("1:1") 'Looks in entire first row; adjust as needed.
+Set rngDateHeader = rngHeaders.Find("Consignee city")
+
+
+ColName = rngDateHeader.Column
+If Not rngDateHeader Is Nothing Then
+For i = 2 To Lst
+J = Worksheets("Cargo Rep IN").Range("A9000").End(xlUp).Row
+If Sheets("RawInput").Cells(i, ColName).Value = "TIMISOARA" Then
+
+Sheets("RawInput").Cells(i, ColName).EntireRow.Copy Destination:=Worksheets("Cargo Rep IN").Range("A" & J + 1)
+Else
+K = Worksheets("Cargo Rep Out").Range("A9000").End(xlUp).Row
+Sheets("RawInput").Cells(i, ColName).EntireRow.Copy Destination:=Worksheets("Cargo Rep Out").Range("A" & K + 1)
+End If
+Next i
+End If
+
+Sheets("Cargo Rep IN").Select
+Lst = Range("A9000").End(xlUp).Row
+
+ Range("AO2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=1+WEEKNUM(RC[-12])-(WEEKNUM(DATE(YEAR(RC[-12]),LOOKUP(MONTH(RC[-12]),{1,4,7,10}),1)))"
+    Range("AO2").Select
+    Selection.NumberFormat = "General"
+    
+    Range("AO2").Select
+    Selection.Copy
+    Range("AO2:AO" & Lst).Select
+     ActiveSheet.Paste
+
+  Application.CutCopyMode = False
+    
+    Sheets("Cargo Rep Out").Select
+Lst = Range("A9000").End(xlUp).Row
+
+ Range("AO2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=1+WEEKNUM(RC[-12])-(WEEKNUM(DATE(YEAR(RC[-12]),LOOKUP(MONTH(RC[-12]),{1,4,7,10}),1)))"
+    Range("AO2").Select
+    Selection.NumberFormat = "General"
+    
+    Range("AO2").Select
+    Selection.Copy
+    Range("AO2:AO" & Lst).Select
+    ActiveSheet.Paste
+
+Application.CutCopyMode = False
+
+ Sheets(Array("QSCOREN", "Details", "Cargo Partner", "Cargo In", "Cargo Out", _
+        "Cargo Rep IN", "Cargo Rep Out", "Delay codes")).Select
+    
+    Sheets(Array("QSCOREN", "Details", "Cargo Partner", "Cargo In", "Cargo Out", _
+        "Cargo Rep IN", "Cargo Rep Out", "Delay codes")).Copy
+        
+MsgBox "Macro Completed And Final Report Generated in New Excel and Total Time Taken " & Format(Time - Namrata, "HH:MM:SS"), vbInformation, "Timer!"
+End Sub

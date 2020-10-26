@@ -1,0 +1,31 @@
+Sub LoopThroughDirectory()
+Dim MyFile As String
+wb = ActiveWorkbook.Name
+
+Dim Filepath As String
+Filepath = "C:\Users\punniloh\Desktop\BO\week no.46\"
+Application.ScreenUpdating = False
+MyFile = Dir(Filepath)
+Do While Len(MyFile) > 0
+
+
+Workbooks.Open (Filepath & MyFile)
+Worksheets("Sheet1").Activate
+ActiveSheet.UsedRange.Copy
+ActiveWorkbook.Close Save = False
+
+Application.DisplayAlerts = False
+Windows(wb).Activate
+
+Worksheets("Sheet1").Select
+Range("A1").Select
+ActiveSheet.Paste
+Application.CutCopyMode = False
+
+
+MyFile = Dir
+Loop
+ActiveWorkbook.Save
+Application.ScreenUpdating = True
+
+End Sub

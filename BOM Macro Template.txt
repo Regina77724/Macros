@@ -1,0 +1,92 @@
+Sub Process()
+wb = ActiveWorkbook.Name
+
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+Namrata = Time
+
+Windows(wb).Activate
+Sheets("MailP1").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 2 Then
+Range("A2:AB" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+Windows(wb).Activate
+
+
+Sheets("MailRaw").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 2 Then
+Range("A2:AB" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+Windows(wb).Activate
+
+Sheets("JIT").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 3 Then
+Range("A3:AB" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+Windows(wb).Activate
+
+Sheets("ISI").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 3 Then
+Range("A3:AB" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+Windows(wb).Activate
+
+Sheets("b2win").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 3 Then
+Range("A3:AB" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+Windows(wb).Activate
+
+Sheets("COSO").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 3 Then
+Range("A3:AB" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+Windows(wb).Activate
+
+Sheets("P2").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 3 Then
+Range("A3:AB" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+Windows(wb).Activate
+
+Sheets("shortage").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 3 Then
+Range("A3:AB" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+Windows(wb).Activate
+
+
+MsgBox "Macro Completed And Final Report Generated in New Excel and Total Time Taken " & Format(Time - Namrata, "HH:MM:SS"), vbInformation, "Timer!"
+End Sub

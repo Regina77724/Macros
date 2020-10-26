@@ -1,0 +1,174 @@
+Sub Process()
+wb = ActiveWorkbook.Name
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+Namrata = Time
+
+Windows(wb).Activate
+Sheets("Main").Select
+ActiveSheet.AutoFilterMode = False
+
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 5 Then
+Range("A6:O" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+Sheets("P1").Select
+ActiveSheet.AutoFilterMode = False
+Cells(1, 1).Select
+Selection.ClearContents
+
+
+
+Windows(wb).Activate
+Sheets("Input").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 2 Then
+Range("A2:BC" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+Sheets("Main").Select
+'''''''''''''''''''''
+MsgBox "Please Select Carrier File Saved In Your System"
+
+varfile = Application.GetOpenFilename
+If varfile = "False" Then
+Sheets("Main").Select
+
+MsgBox "User Canceled the required Action"
+
+Exit Sub
+End If
+
+Workbooks.Open varfile
+
+st = Len(varfile)
+    S = 0
+    MyPos = 0
+    SearchString = varfile
+    SearchChar = "\"
+    cnt = 0
+
+Do While S <= st
+    MyPos = InStr(1, SearchString, SearchChar, 1)
+    If MyPos <> 0 Then
+    remchar = Mid(SearchString, MyPos + 1, st)
+    SearchString = remchar
+    S = S + MyPos
+    Else
+    GoTo nxt:
+    End If
+Loop
+
+nxt:
+        dirpathlen = Len(varfile) - Len(SearchString)
+        Path = Mid(varfile, 1, dirpathlen)
+
+wb1 = ActiveWorkbook.Name
+Sheets("DGF Air").Select
+ActiveSheet.AutoFilterMode = False
+
+er = Cells(Rows.Count, 2).End(xlUp).Row
+Range("A2:BC" & er).Select
+Selection.Copy
+ Windows(wb).Activate
+ Sheets("Input").Select
+Range("A2").Select
+ Selection.PasteSpecial Paste:=xlPasteValuesAndNumberFormats, Operation:= _
+        xlNone, SkipBlanks:=False, Transpose:=False
+        Application.CutCopyMode = False
+Windows(wb1).Close
+
+
+
+ Sheets("Input").Select
+ er = Cells(Rows.Count, 2).End(xlUp).Row
+ Range("A1:AK" & er).Select
+ Selection.Copy
+ Sheets("P1").Select
+ ActiveSheet.Paste
+ Range("B:D,F:G,I:J,L:R,T:V,X:Y,AB:AJ").Select
+ Application.CutCopyMode = False
+ Selection.Delete Shift:=xlToLeft
+ 
+  Sheets("P1").Select
+ dte = InputBox("Please enter date in MM/DD/YYYY format")
+  Rows("1:1").Select
+ Selection.AutoFilter
+    Selection.AutoFilter Field:=8, Operator:= _
+        xlFilterValues, Criteria2:=Array(1, dte)
+        
+        
+ Sheets("P1").Select
+ er = Cells(Rows.Count, 2).End(xlUp).Row
+ Range("A2:I" & er).Select
+ Selection.Copy
+ Sheets("Main").Select
+ Range("A6").Select
+ Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+     :=False, Transpose:=False
+ 
+
+
+Sheets("Main").Select
+        
+        
+        Sheets("Main").Select
+    Lst = Cells(Rows.Count, 2).End(xlUp).Row
+    
+    Columns("J:J").Select
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    Range("J5").Select
+    ActiveCell.FormulaR1C1 = "Concatenated"
+    Range("K5").Select
+    ActiveCell.FormulaR1C1 = "Old rate / kg"
+    Range("L5").Select
+    ActiveCell.FormulaR1C1 = "New rate / kg"
+    Range("M5").Select
+    ActiveCell.FormulaR1C1 = "Saving / kg"
+    Range("N5").Select
+    ActiveCell.FormulaR1C1 = "Total saving"
+   
+    Range("J6").Select
+    ActiveCell.FormulaR1C1 = "=RC[-9]&RC[-7]&RC[-4]"
+    Range("J6").Select
+    Selection.Copy
+    Range("J6:J" & Lst).Select
+    ActiveSheet.Paste
+    Range("K6").Select
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-1],Consolidated!C[-1]:C[1],2,0)"
+    Range("L6").Select
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-1],Consolidated!C[-1]:C[1],3,0)"
+    Range("M6").Select
+    ActiveCell.FormulaR1C1 = "=RC[-2]-RC[-1]"
+    Range("N6").Select
+    ActiveCell.FormulaR1C1 = "=RC[-1]*RC[-5]"
+    Range("K6:N6").Select
+    Selection.Copy
+    Range("K6:N" & Lst).Select
+    ActiveSheet.Paste
+    
+ Sheets("Main").Select
+    Columns("J:J").Select
+    Columns("J:N").Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("J:J").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlToLeft
+    
+    
+    Sheets("Main").Select
+    Sheets("Main").Copy
+
+MsgBox "Macro Completed And Final Report Generated in New Excel and Total Time Taken " & Format(Time - Namrata, "HH:MM:SS"), vbInformation, "Timer!"
+    
+
+
+End Sub

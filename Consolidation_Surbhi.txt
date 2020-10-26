@@ -1,0 +1,91 @@
+Sub consolidation()
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+
+Dim myFile As String
+Dim myValue As String
+Dim j As Integer
+wb = ActiveWorkbook.Name
+Namrata = Time
+Sheets("Consolidatednew").Select
+Lst = Cells(Rows.Count, 1).End(xlUp).Row
+If Lst > 2 Then
+Range("A2:O" & Lst).Select
+Selection.ClearContents
+Else
+End If
+
+Dim fNameAndPath As Variant, wb1 As Workbook
+fNameAndPath = Application.GetOpenFilename(Title:="Select File To Be Opened")
+If fNameAndPath = False Then Exit Sub
+Set wb1 = Workbooks.Open(fNameAndPath)
+
+'Windows(wb1).Activate
+Dim WS_Count As Integer
+Dim I As Integer
+' Set WS_Count equal to the number of worksheets in the active
+' workbook.
+WS_Count = wb1.Worksheets.Count
+' Begin the loop.
+ For I = 1 To WS_Count
+' MsgBox ActiveWorkbook.Worksheets(I).Name
+    For j = 1 To 13
+   
+        Windows(wb).Activate
+        Sheets("Consolidatednew").Select
+        Namrata = Cells(Rows.Count, 13).End(xlUp).Row
+        namratal = Namrata + 1
+        
+        
+        myValue = Cells(1, j).Value
+        wb1.Worksheets(I).Activate
+        Set rngHeaders = Range("1:1") 'Looks in entire first row; adjust as needed.
+        Set rngDateHeader = rngHeaders.Find(myValue)
+        If Not rngDateHeader Is Nothing Then
+        Lst = Cells(Rows.Count, 1).End(xlUp).Row
+        colNam = rngDateHeader.Column
+        Range(Cells(2, colNam), Cells(Lst, colNam)).Select
+        Selection.Copy
+        Windows(wb).Activate
+        Sheets("Consolidatednew").Select
+        er = Cells(Rows.Count, j).End(xlUp).Row
+        ep = er + 1
+        ea = Cells(Rows.Count, 1).End(xlUp).Row
+        eb = ea + 1
+        If er < ea Then
+        Cells(namratal, j).Select
+        ActiveSheet.PasteSpecial
+        Else
+        Cells(ep, j).Select
+        ActiveSheet.PasteSpecial
+       
+       End If
+       End If
+       
+      Next j
+    
+Next I
+
+wb1.Close
+
+Sheets("Consolidatednew").Select
+Lst = Cells(Rows.Count, 1).End(xlUp).Row
+ Range("N2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IFERROR(VLOOKUP(RC[-10],City!C[-12]:C[-11],2,0),VLOOKUP(RC[-10],City!C[-13]:C[-11],3,0))"
+    Range("O2").Select
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-13],Currency!C[-14]:C[-13],2,0)"
+    Range("N2:O2").Select
+    Selection.Copy
+    Range("N2:O" & Lst).Select
+    ActiveSheet.Paste
+   Columns("N:O").Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+Sheets("Consolidatednew").Select
+Sheets("Consolidatednew").Copy
+MsgBox "Macro Completed And Final Report Generated in New Excel and Total Time Taken " & Format(Time - Namrata, "HH:MM:SS"), vbInformation, "Timer!"
+    
+End Sub

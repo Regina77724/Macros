@@ -1,0 +1,23 @@
+Sub checkIfAnyCellInRangeIsEmpty()
+Dim Rng As Range
+Dim myCellRange As Range
+Sheets("E-book Application Form").Select
+Lst = Cells(Rows.Count, 2).End(xlUp).Row
+Set MyRange = Range("A2:L" & Lst)
+Set YourRange = Range("AD2:AF" & Lst)
+Set HisRange = Range("L6:O" & Lst)
+Set hafeezRange = Range("Q6:Q" & Lst)
+Set nileshRange = Range("Y6:AA" & Lst)
+Set myCellRange = Union(MyRange, YourRange, HisRange, hafeezRange, nileshRange)
+For Each Rng In myCellRange
+If Rng.Value = "" Then
+
+ColToLetter = Split(Rng.Address, "$")(1)
+colnumber = Split(Rng.Address, "$")(2)
+COL = ColToLetter + "4"
+myValue = Range(COL).Value
+Range("AE" & colnumber) = Range("AE" & colnumber).Value + "     " + myValue
+End If
+
+Next
+End Sub

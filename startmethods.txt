@@ -1,0 +1,13 @@
+ StartMethod property applies to all types of adapters. This property determines how the target application is started. Your options are listed here:
+
+Start – With this option, starting the adapter causes Studio to launch and hook the application defined by the Path property or the specified browser which is directed to the URL defined by the StartPage property.
+
+StartAndWait – With this option, which only applies to the Windows adapter, starting the adapter causes Studio to launch the application identified in the Path property and then waits until the application in the TargetPath is launched. When the TargetPath application runs, Studio then hooks the TargetPath application.
+
+Note:  Studio does not hook the Path application, therefore you cannot interrogate or automate the Path application. If you choose this option, the Runtime user must have Pega Notification Manager installed. You install these services during the initial installation.
+
+MonitorAll – With this option, after the adapter starts, Studio waits until the Path application or specified browser is run and then hooks the application. In this case, the Path application must be launched independently  (for example, from an external application or manually) after the adapter starts. Once the application is launched, Studio hooks the application and the interrogated controls are available to the project automations or event monitoring. The adapter must be started before the Path application or specified browser is launched or Studio will not hook the application.
+
+When using this StartMethod with the Windows adapter, you can omit the full path when specifying the application executable in the Path property and simply enter the executable file name.  You must set the project's TargetEnvironment to Driver with this StartMethod.
+
+The MonitorAll StartMethod enables the adapter to remain running if the Path application shuts down (due to an application error or the end user closing the application). When the application is restarted, Studio will again hook the application.

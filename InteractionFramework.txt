@@ -1,0 +1,29 @@
+Interaction Framework Overview
+
+The OpenSpan Interaction Framework is the foundation for all Agile Desktop projects. This framework lets multiple projects interact with one another without direct dependencies. Using the Interaction Framework, you can define a shared set of data and activities known as an interaction. All of the projects in the solution can then use this interaction.
+
+Using the framework, you can add new projects to a solution to satisfy a new business requirements without having to modify existing projects. Having interactions already defined makes the coding of projects more efficient and lets you deploy projects more quickly. It also let you test projects independently, which can improve quality.
+
+Using the Interaction Framework...
+
+Improves reusability by creating a data and activity contract between projects
+
+Eliminates direct dependencies
+
+Queues activities to simplify threading and state management during automations
+
+Separates configuration and user interface from coding when used with the Agile Desktop Framework
+
+Lets you quickly add new projects to address business requirements without updating existing projects
+
+Lets you focus on automation and not configuration, user interface, or threading
+
+Lets you build and test projects more efficiently by reducing dependencies between projects
+
+Lets you systematically iterate existing automations to morph as business requirements change
+
+Improves quality by eliminating complex tasks and reducing manual activities
+
+When used with OpenSpan Management Console, Interaction Framework lets you deliver a powerful resource foundation that increases development efficiency and provides fast, easy deployment of automation and Agile Desktop projects within your enterprise.
+
+ 

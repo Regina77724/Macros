@@ -1,0 +1,20 @@
+Sub FindAddressColumn()
+
+Sheets("Raw input").Select
+Lst = Cells(Rows.Count, 2).End(xlUp).Row
+    
+Set rngHeaders = Range("1:1") 'Looks in entire first row; adjust as needed.
+Set rngDateHeader = rngHeaders.Find("Consignee city")
+ColName = rngDateHeader.Column
+MsgBox ColName
+If Not rngDateHeader Is Nothing Then
+For i = 2 To Lst
+J = Worksheets("Cargo Rep IN").Range("A9000").End(xlUp).Row
+If Sheets("Raw input").Cells(i, ColName).Value = "TIMISOARA" Then
+
+Sheets("Raw input").Cells(i, ColName).EntireRow.Copy Destination:=Worksheets("Cargo Rep IN").Range("A" & J + 1)
+
+End If
+Next i
+End If
+End Sub

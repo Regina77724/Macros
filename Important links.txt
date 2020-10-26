@@ -1,0 +1,65 @@
+http://wiki.flextronics.com
+https://flextronics365.sharepoint.com/sites/pplres/mgntsys/wwref/Pages/WW-Reference-Page.aspx
+flextronics365.sharepoint.com/sites/gpsc/SitePages/kinaxis.aspx 
+https://flextronics365.sharepoint.com/sites/gpsc_process_automation/automation_developer_view/SitePages/GPSC%20Automation%20Library.aspx?e=1%3A655ffbe9571c4ad7badb10ceb89c32dc
+
+DMA LINK:
+https://flextronics365.flextronics.com/dmssites/dmsas/bpt/pl/Forms/AllItems.aspx
+https://pulsenavigation.flextronics.com/pulsenavigation/#/
+http://www.leanvlog.com/
+kINAXISIS LINK
+https://aps-prod1.flextronics.com/RapidResponse/ssi.ashx
+https://goeasy.flex.com
+BI REPORTIG LINK
+https://bipreporting.flextronics.com/BOE/BI
+ALCATEL NOKIA LINK
+https://my-home.alcatel-lucent.com/portal/group/scportal/1st-responder
+https://academy.pega.com/library/72/pega-robotic-automation-architect-essentials.
+
+;'''''''''''''''''''''''''''''''''
+https://goeasy.flex.com
+Flex#123 
+am3.sac.flextronics.com
+Sunday.1
+punsnavg
+Flex@123 
+punpppaw
+Monday.1
+\\punux001\PUNE_PLANNING 
+/am3/exp_imp/C898/Daily_Rpt/
+punprdes
+Mobile@12345
+''''''''''''''''''''''''''''''''''''
+https://bipreporting.flextronics.com/BOE/BI
+
+https://bipreporting.flextronics.com/BOE/BI/custom.jsp
+@ASIA.AD.FLEXTRONICS.COM
+Please use the following credentials to login.
+
+User ID: @ASIA.AD.FLEXTRONICS.COM
+Password: <Your Windows password>
+Authentication: Win ad
+Link: https://bipreporting.flextronics.com/BOE/BI/custom.jsp
+punniloh@ASIA.AD.FLEXTRONICS.COM
+October@12
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+cancellation of WO  tisfc0203m000
+fxcus0211mc01
+fxsfc0201m008
+fxsfc0403m300
+
+''''''''''''''''''''''''''''''''''''''
+Hi Namrata,
+	Please check out the below links. These are online MOOCs. Wide range of subjects (not just Computer Science!)
+
+https://www.coursera.org/
+https://www.edx.org/
+http://academicearth.org/
+
+And of course, the great MIT’s Open Courseware: https://ocw.mit.edu/index.htm
+
+	You may need to register in these sites. Courses are free (without any Certificate) or can be taken with a fee for which you will get completion certification. To opt for free, choose the option “Audit only”. You will have access to videos in these.
+
+	Please do check out the catalog of courses and topics. Happy Learning!! ? ? 
+

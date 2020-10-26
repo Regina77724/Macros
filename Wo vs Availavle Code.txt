@@ -1,0 +1,839 @@
+Sub process()
+
+wb = ActiveWorkbook.Name
+
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+timervariable = Time
+
+Windows(wb).Activate
+Sheets("Summary").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 3 Then
+Range("A3:O" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+
+Sheets("Atlas data summary").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 1).End(xlUp).Row
+If er > 3 Then
+Range("A3:J" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+
+
+Sheets("BO 1 ""total raw inventory""").Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 5 Then
+Rows("5:" & er).Select
+Selection.Delete
+End If
+Cells(1, 1).Select
+
+Sheets("BO 2 ""WO Allocation""").Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 5 Then
+Rows("5:" & er).Select
+Selection.Delete
+End If
+Cells(1, 1).Select
+
+Sheets("BO 3 ""WH purge inventory""").Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 5 Then
+Rows("5:" & er).Select
+Selection.Delete
+End If
+Cells(1, 1).Select
+
+Sheets("SMI").Select
+Cells.Select
+Selection.Delete
+Cells(1, 1).Select
+
+Sheets("""Atlas sytem on hold material""").Select
+Cells.Select
+Selection.ClearContents
+Cells(1, 1).Select
+
+Sheets("Summary 2").Select
+Cells.Select
+Selection.Delete
+Cells(1, 1).Select
+
+Sheets("Main").Select
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+MsgBox "Please Select BO 1 Total Raw Inventory File Saved In Your System"
+
+varfile = Application.GetOpenFilename
+If varfile = "False" Then
+Sheets("Main").Select
+
+MsgBox "User Canceled the required Action"
+
+Exit Sub
+End If
+
+Workbooks.Open varfile
+
+st = Len(varfile)
+    S = 0
+    MyPos = 0
+    SearchString = varfile
+    SearchChar = "\"
+    cnt = 0
+
+Do While S <= st
+    MyPos = InStr(1, SearchString, SearchChar, 1)
+    If MyPos <> 0 Then
+    remchar = Mid(SearchString, MyPos + 1, st)
+    SearchString = remchar
+    S = S + MyPos
+    Else
+    GoTo nxt:
+    End If
+Loop
+
+nxt:
+        dirpathlen = Len(varfile) - Len(SearchString)
+        Path = Mid(varfile, 1, dirpathlen)
+
+wb1 = ActiveWorkbook.Name
+er = Cells(Rows.Count, 2).End(xlUp).Row
+Range("A1").Select
+    Cells.Find(What:="item", After:=ActiveCell, LookIn:=xlFormulas, LookAt _
+        :=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:= _
+        False, SearchFormat:=False).Activate
+ ac = ActiveCell.Row
+ ab1 = Split(ActiveCell.Address, "$")(1)
+ Selection.End(xlToRight).Select
+ ab2 = Split(ActiveCell.Address, "$")(1)
+ Range(ab1 & ac + 1 & ":" & ab2 & er).Select
+ Selection.Copy
+ 
+ Windows(wb).Activate
+Sheets("BO 1 ""total raw inventory""").Select
+Range("B5").Select
+ActiveSheet.Paste
+Application.CutCopyMode = False
+Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+Cells(1, 1).Select
+Windows(wb1).Close
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+MsgBox "Please Select BO 2 WO Allocation File Saved In Your System"
+
+varfile = Application.GetOpenFilename
+If varfile = "False" Then
+Sheets("Main").Select
+
+MsgBox "User Canceled the required Action"
+
+Exit Sub
+End If
+
+Workbooks.Open varfile
+
+st = Len(varfile)
+    S = 0
+    MyPos = 0
+    SearchString = varfile
+    SearchChar = "\"
+    cnt = 0
+
+Do While S <= st
+    MyPos = InStr(1, SearchString, SearchChar, 1)
+    If MyPos <> 0 Then
+    remchar = Mid(SearchString, MyPos + 1, st)
+    SearchString = remchar
+    S = S + MyPos
+    Else
+    GoTo nxt1:
+    End If
+Loop
+
+nxt1:
+        dirpathlen = Len(varfile) - Len(SearchString)
+        Path = Mid(varfile, 1, dirpathlen)
+
+wb1 = ActiveWorkbook.Name
+er = Cells(Rows.Count, 2).End(xlUp).Row
+Range("A1").Select
+    Cells.Find(What:="item", After:=ActiveCell, LookIn:=xlFormulas, LookAt _
+        :=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:= _
+        False, SearchFormat:=False).Activate
+ ac = ActiveCell.Row
+ ab1 = Split(ActiveCell.Address, "$")(1)
+ Selection.End(xlToRight).Select
+ ab2 = Split(ActiveCell.Address, "$")(1)
+ Range(ab1 & ac + 1 & ":" & ab2 & er).Select
+ Selection.Copy
+ 
+ Windows(wb).Activate
+ Sheets("BO 2 ""WO Allocation""").Select
+ Range("B5").Select
+ ActiveSheet.Paste
+ Application.CutCopyMode = False
+ Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+ Cells(1, 1).Select
+ Windows(wb1).Close
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+MsgBox "Please Select BO 3 WH purge inventory File Saved In Your System"
+
+varfile = Application.GetOpenFilename
+If varfile = "False" Then
+Sheets("Main").Select
+
+MsgBox "User Canceled the required Action"
+
+Exit Sub
+End If
+
+Workbooks.Open varfile
+
+st = Len(varfile)
+    S = 0
+    MyPos = 0
+    SearchString = varfile
+    SearchChar = "\"
+    cnt = 0
+
+Do While S <= st
+    MyPos = InStr(1, SearchString, SearchChar, 1)
+    If MyPos <> 0 Then
+    remchar = Mid(SearchString, MyPos + 1, st)
+    SearchString = remchar
+    S = S + MyPos
+    Else
+    GoTo nxt2:
+    End If
+Loop
+
+nxt2:
+        dirpathlen = Len(varfile) - Len(SearchString)
+        Path = Mid(varfile, 1, dirpathlen)
+
+wb1 = ActiveWorkbook.Name
+er = Cells(Rows.Count, 2).End(xlUp).Row
+Range("A1").Select
+    Cells.Find(What:="item", After:=ActiveCell, LookIn:=xlFormulas, LookAt _
+        :=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:= _
+        False, SearchFormat:=False).Activate
+ ac = ActiveCell.Row
+ ab1 = Split(ActiveCell.Address, "$")(1)
+ Selection.End(xlToRight).Select
+ ab2 = Split(ActiveCell.Address, "$")(1)
+ Range(ab1 & ac + 1 & ":" & ab2 & er).Select
+ Selection.Copy
+ 
+ Windows(wb).Activate
+ Sheets("BO 3 ""WH purge inventory""").Select
+ Range("B5").Select
+ ActiveSheet.Paste
+ Application.CutCopyMode = False
+ Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+ Cells(1, 1).Select
+ Windows(wb1).Close
+ Windows(wb).Activate
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+MsgBox "Please Select SMI Item List File Saved In Your System"
+
+varfile = Application.GetOpenFilename
+If varfile = "False" Then
+Sheets("Main").Select
+
+MsgBox "User Canceled the required Action"
+
+Exit Sub
+End If
+
+Workbooks.Open varfile
+
+st = Len(varfile)
+    S = 0
+    MyPos = 0
+    SearchString = varfile
+    SearchChar = "\"
+    cnt = 0
+
+Do While S <= st
+    MyPos = InStr(1, SearchString, SearchChar, 1)
+    If MyPos <> 0 Then
+    remchar = Mid(SearchString, MyPos + 1, st)
+    SearchString = remchar
+    S = S + MyPos
+    Else
+    GoTo nxt3:
+    End If
+Loop
+
+nxt3:
+        dirpathlen = Len(varfile) - Len(SearchString)
+        Path = Mid(varfile, 1, dirpathlen)
+
+wb1 = ActiveWorkbook.Name
+er = Cells(Rows.Count, 2).End(xlUp).Row
+Range("A1").Select
+    Cells.Find(What:="item", After:=ActiveCell, LookIn:=xlFormulas, LookAt _
+        :=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:= _
+        False, SearchFormat:=False).Activate
+ ac = ActiveCell.Row
+ ab1 = Split(ActiveCell.Address, "$")(1)
+ Selection.End(xlToRight).Select
+ ab2 = Split(ActiveCell.Address, "$")(1)
+ Range(ab1 & ac & ":" & ab2 & er).Select
+ Selection.Copy
+ 
+ Windows(wb).Activate
+ Sheets("SMI").Select
+ Range("A1").Select
+ ActiveSheet.Paste
+ Application.CutCopyMode = False
+ Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+ Cells(1, 1).Select
+ Windows(wb1).Close
+ Windows(wb).Activate
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+MsgBox "Please Select Atlas sytem on hold material File Saved In Your System"
+
+varfile = Application.GetOpenFilename
+If varfile = "False" Then
+Sheets("Main").Select
+
+MsgBox "User Canceled the required Action"
+
+Exit Sub
+End If
+
+Workbooks.Open varfile
+
+st = Len(varfile)
+    S = 0
+    MyPos = 0
+    SearchString = varfile
+    SearchChar = "\"
+    cnt = 0
+
+Do While S <= st
+    MyPos = InStr(1, SearchString, SearchChar, 1)
+    If MyPos <> 0 Then
+    remchar = Mid(SearchString, MyPos + 1, st)
+    SearchString = remchar
+    S = S + MyPos
+    Else
+    GoTo nxt4:
+    End If
+Loop
+
+nxt4:
+        dirpathlen = Len(varfile) - Len(SearchString)
+        Path = Mid(varfile, 1, dirpathlen)
+
+wb1 = ActiveWorkbook.Name
+er = Cells(Rows.Count, 2).End(xlUp).Row
+Range("A1").Select
+    Cells.Find(What:="bra", After:=ActiveCell, LookIn:=xlFormulas, LookAt _
+        :=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:= _
+        False, SearchFormat:=False).Activate
+ ac = ActiveCell.Row
+ ab1 = Split(ActiveCell.Address, "$")(1)
+ Selection.End(xlToRight).Select
+ ab2 = Split(ActiveCell.Address, "$")(1)
+ Range(ab1 & ac & ":" & ab2 & er).Select
+ Selection.Copy
+ 
+ Windows(wb).Activate
+ Sheets("""Atlas sytem on hold material""").Select
+ Range("A1").Select
+ ActiveSheet.Paste
+ Application.CutCopyMode = False
+ Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+ Cells(1, 1).Select
+ Windows(wb1).Close
+ Windows(wb).Activate
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    Windows(wb).Activate
+    Sheets("BO 2 ""WO Allocation""").Select
+    er = Cells(Rows.Count, 2).End(xlUp).Row
+    Range("B5:G" & er).Select
+    Selection.Copy
+    Sheets("summary").Select
+    Range("B3").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Range("A3").Select
+    Application.CutCopyMode = False
+    
+    Range("A3").Select
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[3],'account vs. item group'!C:C[1],2,0)"
+    Range("H3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=SUMIF('BO 1 ""total raw inventory""'!C[-6],RC[-6],'BO 1 ""total raw inventory""'!C[-1])"
+    Range("I3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=SUMIF('BO 3 ""WH purge inventory""'!C[-7],RC[-7],'BO 3 ""WH purge inventory""'!C[-3])"
+    Range("J3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=SUMIF('Atlas data summary'!C[-9],RC[-8],'Atlas data summary'!C[-1])"
+    Range("K3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=SUMIF('Atlas data summary'!C[-10],RC[-9],'Atlas data summary'!C[-1])"
+    Range("L3").Select
+    ActiveCell.FormulaR1C1 = "=RC[-4]-RC[-2]-RC[-5]-RC[-3]"
+    Range("M3").Select
+    ActiveCell.FormulaR1C1 = "=RC[-5]-RC[-3]-RC[-2]-RC[-6]-RC[-4]"
+    Range("N3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=IF(RC[-2]<0,""top urgent"",IF(RC[-1]<0,""need follow"",""""))"
+    
+    er = Cells(Rows.Count, 2).End(xlUp).Row
+    Range("A3").Select
+    Selection.Copy
+    Range("A3:A" & er).Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    
+    Range("H3:N3").Select
+    Selection.Copy
+    Range("H3:N" & er).Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    Range("A3").Select
+    
+    Range("A2:N" & er).Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    Range("A3").Select
+    
+    
+    
+    Sheets("BO 1 ""total raw inventory""").Select
+    Range("B5").Select
+    er = Cells(Rows.Count, 2).End(xlUp).Row
+    Range("B5:B" & er).Select
+    Selection.Copy
+    Sheets("Atlas data summary").Select
+    Range("A3").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    
+    
+   Sheets("Atlas data summary").Select
+    Range("B3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=SUMIFS('""Atlas sytem on hold material""'!C[4],'""Atlas sytem on hold material""'!C[1],'Atlas data summary'!RC[-1],'""Atlas sytem on hold material""'!C[5],'Atlas data summary'!R2C2)"
+    Range("C3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=SUMIFS('""Atlas sytem on hold material""'!C[3],'""Atlas sytem on hold material""'!C,'Atlas data summary'!RC[-2],'""Atlas sytem on hold material""'!C[4],'Atlas data summary'!R2C3)"
+    Range("D3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=SUMIFS('""Atlas sytem on hold material""'!C[2],'""Atlas sytem on hold material""'!C[-1],'Atlas data summary'!RC[-3],'""Atlas sytem on hold material""'!C[3],'Atlas data summary'!R2C4)"
+    Range("E3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=SUMIFS('""Atlas sytem on hold material""'!C[1],'""Atlas sytem on hold material""'!C[-2],'Atlas data summary'!RC[-4],'""Atlas sytem on hold material""'!C[2],'Atlas data summary'!R2C5)"
+    Range("F3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=SUMIFS('""Atlas sytem on hold material""'!C,'""Atlas sytem on hold material""'!C[-3],'Atlas data summary'!RC[-5],'""Atlas sytem on hold material""'!C[1],'Atlas data summary'!R2C6)"
+    Range("G3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=SUMIFS('""Atlas sytem on hold material""'!C[-1],'""Atlas sytem on hold material""'!C[-4],'Atlas data summary'!RC[-6],'""Atlas sytem on hold material""'!C,'Atlas data summary'!R1C7)"
+    Range("H3").Select
+    ActiveCell.FormulaR1C1 = _
+        "=SUMIFS('""Atlas sytem on hold material""'!C[-2],'""Atlas sytem on hold material""'!C[-5],'Atlas data summary'!RC[-7],'""Atlas sytem on hold material""'!C[-1],'Atlas data summary'!R2C8)"
+    Range("I3").Select
+    ActiveCell.FormulaR1C1 = "=RC[-7]+RC[-6]+RC[-4]+RC[-2]+RC[-1]"
+    Range("J3").Select
+    ActiveCell.FormulaR1C1 = "=RC[-6]"
+    
+    er = Cells(Rows.Count, 1).End(xlUp).Row
+    Range("B3:J3").Select
+    Selection.Copy
+    Range("B3:J" & er).Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    Range("A3").Select
+    
+    Sheets("summary").Select
+    Range("O3").Select
+    
+'    ActiveCell.FormulaR1C1 = _
+'        "=VLOOKUP(RC[-13],'[898000840-SMI Item List.xlsx]Report 1'!C1,1,0)"
+   ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-13],SMI!C1,1,0)"
+
+    er = Cells(Rows.Count, 2).End(xlUp).Row
+    Range("O3").Select
+    Selection.Copy
+    Range("O3:O" & er).Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    
+    Columns("O:O").Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Application.CutCopyMode = False
+    Selection.Replace What:="#N/A", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    Range("O3").Select
+    
+    Range("A2:O" & er).Select
+    Selection.AutoFilter
+    Selection.AutoFilter Field:=15, Criteria1:="<>"
+    er = Cells(Rows.Count, 2).End(xlUp).Row
+    If er > 1 Then
+    Rows("3:" & er).Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Delete Shift:=xlUp
+    End If
+    Selection.AutoFilter
+    Range("A1").Select
+    er = Cells(Rows.Count, 2).End(xlUp).Row
+    Range("O3:O" & er).Select
+    Selection.ClearContents
+    Cells(1, 1).Select
+    
+    Sheets("Summary 2").Select
+    
+    Range("A1").Select
+    
+    ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:= _
+        "summary!R2C1:R" & er & "C14", Version:=6).CreatePivotTable TableDestination:= _
+        "'[" & wb & "]Summary 2'!R3C1", _
+        TableName:="PivotTable2", DefaultVersion:=6
+    With ActiveSheet.PivotTables("PivotTable2").PivotFields("Account")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    With ActiveSheet.PivotTables("PivotTable2").PivotFields("Alert")
+        .Orientation = xlColumnField
+        .Position = 1
+    End With
+    ActiveSheet.PivotTables("PivotTable2").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable2").PivotFields("Alert"), "Count of Alert", xlCount
+    With ActiveSheet.PivotTables("PivotTable2").PivotFields("Alert")
+        .Orientation = xlColumnField
+        .Position = 1
+    End With
+    
+    
+    Cells.Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValuesAndNumberFormats, Operation:= _
+        xlNone, SkipBlanks:=False, Transpose:=False
+        Application.CutCopyMode = False
+    Rows("1:3").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Range("IV1").Select
+    Selection.End(xlToLeft).Select
+    ac = ActiveCell.Column
+    For i = 2 To ac
+    amt = Cells(1, i).Value
+    If amt = "" Then
+    Cells(1, i).Select
+    ad = ActiveCell.Column
+    Columns(ad).Select
+    Selection.Delete Shift:=xlToLeft
+    End If
+    Next
+    
+    Rows("1:1").Select
+    Cells.Find(What:="top", After:=ActiveCell, LookIn:=xlFormulas, LookAt _
+        :=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:= _
+        False, SearchFormat:=False).Activate
+    ac = ActiveCell.Column
+    Columns(ac).Select
+    Selection.Cut
+    Columns("B:B").Select
+    Selection.Insert Shift:=xlToRight
+    
+    Rows("1:1").Select
+    Cells.Find(What:="grand", After:=ActiveCell, LookIn:=xlFormulas, LookAt _
+        :=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:= _
+        False, SearchFormat:=False).Activate
+    ac = ActiveCell.Column
+    Columns(ac).Select
+    Selection.Delete Shift:=xlToLeft
+    Cells.Select
+    Selection.AutoFilter
+    Selection.AutoFilter Field:=2, Criteria1:="="
+    er = Cells(Rows.Count, 1).End(xlUp).Row
+    If er > 1 Then
+    Rows("2:" & er).Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Delete Shift:=xlUp
+    End If
+    Selection.AutoFilter
+    Range("A2").Select
+    er = Cells(Rows.Count, 1).End(xlUp).Row
+    
+    
+    Range("A1:C1").Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorDark1
+        .TintAndShade = -0.349986266670736
+        .PatternTintAndShade = 0
+    End With
+    Range("B2:B" & er).Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 255
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    Range("C2:C" & er).Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 65535
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    Range("B2").Select
+    Selection.End(xlDown).Select
+    ActiveCell.Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 49407
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    
+    ActiveWorkbook.Worksheets("Summary 2").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("Summary 2").Sort.SortFields.Add Key:=Range("A1"), _
+        SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+    Range("B1").Select
+    ActiveWorkbook.Worksheets("Summary 2").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("Summary 2").Sort.SortFields.Add Key:=Range("B1"), _
+        SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+    With ActiveWorkbook.Worksheets("Summary 2").Sort
+        .SetRange Range("A2:C" & er)
+        .Header = xlNo
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    
+Sheets("Summary 2").Select
+Range("A1").Select
+    ActiveCell.FormulaR1C1 = "Account"
+    Range("B1").Select
+    ActiveCell.FormulaR1C1 = "Top Urgent"
+    Range("C1").Select
+    ActiveCell.FormulaR1C1 = "Need Follow"
+    Range("A1").Select
+    Range(Selection, Selection.End(xlToRight)).Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Columns.AutoFit
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    Range("A1").Select
+
+'    ActiveWorkbook.Worksheets("Summary 2").Sort.SortFields.Clear
+'    ActiveWorkbook.Worksheets("Summary 2").Sort.SortFields.Add Key:=Range("B2:B" & er), _
+'        SortOn:=xlSortOnValues, Order:=xlDescending, DataOption:=xlSortNormal
+'    With ActiveWorkbook.Worksheets("Summary 2").Sort
+'        .SetRange Range("A1:C" & er)
+'        .Header = xlYes
+'        .MatchCase = False
+'        .Orientation = xlTopToBottom
+'        .SortMethod = xlPinYin
+'        .Apply
+'    End With
+    
+    
+    Sheets(Array("Summary 2", "summary", "Atlas data summary", _
+        """Atlas sytem on hold material""", "BO 1 ""total raw inventory""", _
+        "BO 2 ""WO Allocation""", "BO 3 ""WH purge inventory""", "account vs. item group" _
+        )).Select
+    
+    Sheets(Array("Summary 2", "summary", "Atlas data summary", _
+        """Atlas sytem on hold material""", "BO 1 ""total raw inventory""", _
+        "BO 2 ""WO Allocation""", "BO 3 ""WH purge inventory""", "account vs. item group" _
+        )).Copy
+    
+   Windows(wb).Activate
+   Sheets("Summary").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 3 Then
+Range("A3:O" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+
+Sheets("Atlas data summary").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 1).End(xlUp).Row
+If er > 3 Then
+Range("A3:J" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+
+
+Sheets("BO 1 ""total raw inventory""").Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 5 Then
+Rows("5:" & er).Select
+Selection.Delete
+End If
+Cells(1, 1).Select
+
+Sheets("BO 2 ""WO Allocation""").Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 5 Then
+Rows("5:" & er).Select
+Selection.Delete
+End If
+Cells(1, 1).Select
+
+Sheets("BO 3 ""WH purge inventory""").Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 5 Then
+Rows("5:" & er).Select
+Selection.Delete
+End If
+Cells(1, 1).Select
+
+Sheets("SMI").Select
+Cells.Select
+Selection.Delete
+Cells(1, 1).Select
+
+Sheets("""Atlas sytem on hold material""").Select
+Cells.Select
+Selection.ClearContents
+Cells(1, 1).Select
+
+Sheets("Summary 2").Select
+Cells.Select
+Selection.Delete
+Cells(1, 1).Select
+
+Sheets("Main").Select
+    
+MsgBox "Macro Completed And Final Report Generated in New Excel and Total Time Taken " & Format(Time - kunal_anand, "HH:MM:SS"), vbInformation, "Timer!"
+    
+
+
+End Sub
+''''''''
+Sub TTC()
+  With Range("A1", Range("A" & Rows.Count).End(xlUp))
+    .TextToColumns Destination:=.Cells(1, 2), DataType:=xlDelimited, TextQualifier:=xlDoubleQuote, _
+      ConsecutiveDelimiter:=False, Tab:=False, Semicolon:=False, Comma:=False, Space:=False, Other:=True, OtherChar:="|"
+  End With
+End Sub
+
+'''''''''

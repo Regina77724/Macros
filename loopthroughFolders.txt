@@ -1,0 +1,64 @@
+Function Recurse(sPath As String) As String
+
+    Dim FSO As New FileSystemObject
+    Dim myFolder As Folder
+    Dim mySubFolder As Folder
+    Dim myFile As File
+
+    Set myFolder = FSO.GetFolder(sPath)
+
+    For Each mySubFolder In myFolder.SubFolders
+        For Each myFile In mySubFolder.Files
+           Call ProcessData(myFile)
+        
+   
+        Next
+        Recurse = Recurse(mySubFolder.Path)
+    Next
+
+End Function
+
+Sub TestR()
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+pathsource = InputBox("Please enter the source file path")
+  
+    Call Recurse(pathsource & "\")
+
+End Sub
+Sub ProcessData(ByVal Fname As String)
+   
+    Dim WBK As Workbook
+      Dim MCDrow As Long
+  
+      
+    MCDrow = ThisWorkbook.Sheets("Consolidated").Cells(Rows.Count, 1).End(xlUp).Row
+   
+
+    Set WBK = Workbooks.Open(Filename:=Fname)
+    'open the target workbook
+       'do your stuff below
+    
+    
+ActiveSheet.Activate
+        ActiveSheet.Unprotect
+        ActiveSheet.Activate
+        
+        'find row before next blank  cell in column A
+        ilastrow = Cells(Rows.Count, 1).End(xlUp).Row
+        If ilastrow > 1 Then
+        Range("A2:A" & ilastrow).Copy Destination:=ThisWorkbook.Sheets("Consolidated").Cells(MCDrow + 1, 1)
+        MCDrow = ThisWorkbook.Sheets("Consolidated").Cells(Rows.Count, 1).End(xlUp).Row
+           
+        Application.ScreenUpdating = False
+
+    'MsgBox WBK.Name
+    '
+     End If
+    WBK.Close savechanges:=False
+    'close the workbook without  saving any  changes
+     
+
+     
+End Sub
+

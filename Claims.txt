@@ -1,0 +1,112 @@
+Sub Process()
+'
+' Macro1 Macro
+'
+
+'
+
+wb = ActiveWorkbook.Name
+
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+Namrata = Time
+
+
+Windows(wb).Activate
+Sheets("DATABASE").Select
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 2 Then
+Range("A2:BZ" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+Sheets("Main").Select
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+MsgBox "Please Select Customer Claim File Saved In Your System"
+
+varfile = Application.GetOpenFilename
+If varfile = "False" Then
+Sheets("Main").Select
+
+MsgBox "User Canceled the required Action"
+
+Exit Sub
+End If
+
+Workbooks.Open varfile
+
+st = Len(varfile)
+    S = 0
+    MyPos = 0
+    SearchString = varfile
+    SearchChar = "\"
+    cnt = 0
+
+Do While S <= st
+    MyPos = InStr(1, SearchString, SearchChar, 1)
+    If MyPos <> 0 Then
+    remchar = Mid(SearchString, MyPos + 1, st)
+    SearchString = remchar
+    S = S + MyPos
+    Else
+    GoTo nxt:
+    End If
+Loop
+
+nxt:
+        dirpathlen = Len(varfile) - Len(SearchString)
+        Path = Mid(varfile, 1, dirpathlen)
+
+wb1 = ActiveWorkbook.Name
+Sheets("DATABASE").Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+Range("A2:BZ" & er).Select
+
+ Selection.Copy
+ 
+ Windows(wb).Activate
+Sheets("DATABASE").Select
+Range("A2").Select
+ActiveSheet.Paste
+Application.CutCopyMode = False
+Windows(wb1).Close
+
+
+Sheets("DATABASE").Select
+
+    Rows("1:1").Select
+    Range("F1").Activate
+    Selection.AutoFilter
+    'select timi and delete rest
+    Range("J1").Select
+    Selection.AutoFilter Field:=10, Criteria1:="<> PCBA_TIMISOARA_P", Operator:=xlFilterValues
+    er = Cells(Rows.Count, 2).End(xlUp).Row
+    If er > 1 Then
+    Rows("2:" & er).Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Delete Shift:=xlUp
+    End If
+    Selection.AutoFilter
+    
+    
+    
+    Range("Q1").Select
+    ' claim catergory , keep feirght and delete rest
+    Selection.AutoFilter
+    Selection.AutoFilter Field:=17, Criteria1:="<> FREIGHT", Operator:=xlFilterValues
+    er = Cells(Rows.Count, 2).End(xlUp).Row
+    If er > 1 Then
+    Rows("2:" & er).Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Delete Shift:=xlUp
+    End If
+    Selection.AutoFilter
+'    Selection.AutoFilter
+    ActiveWorkbook.Save
+    Sheets("DATABASE").Select
+    Sheets("DATABASE").Copy
+    MsgBox "Macro Completed And Final Report Generated in New Excel and Total Time Taken " & Format(Time - Namrata, "HH:MM:SS"), vbInformation, "Timer!"
+End Sub

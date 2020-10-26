@@ -1,0 +1,44 @@
+Sub compare_rate()
+'
+' compare_rate Macro
+'
+
+'
+    Sheets("Inbound").Select
+    Lst = Range("G9000").End(xlUp).Row
+    
+    Range("AM2").Select
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-32],Zone!C[-37]:C[-34],4,0)"
+    Range("AN2").Select
+    ActiveCell.FormulaR1C1 = "=CEILING.MATH(RC[-28],0.5)"
+    Range("AM2:AN2").Select
+    Selection.Copy
+    Range("AM2:AN" & Lst).Select
+     ActiveSheet.Paste
+    Application.CutCopyMode = False
+   
+    For i = 2 To Lst
+    If Range("AN" & i).Value >= 300 Then
+    Range("AO" & i).Value = "=((INDEX('HU_TD_IB EWW_Rate'!R14C2:R614C19,MATCH(Inbound!RC[-1],'HU_TD_IB EWW_Rate'!R14C2:R614C2),MATCH(Inbound!RC[-2],'HU_TD_IB EWW_Rate'!R14C2:R14C19))+(RC[-1]-300)*2*(INDEX('HU_TD_IB EWW_Rate'!R618C2:R618C19,MATCH(RC[-2],'HU_TD_IB EWW_Rate'!R617C2:R617C19,0))))*FSC!R1C2)+(INDEX('HU_TD_IB EWW_Rate'!R14C2:R614C19,MATCH(Inbound!RC[-1],'HU_TD_IB EWW_Rate'!R14C2:R614C" & _
+        "2),MATCH(Inbound!RC[-2],'HU_TD_IB EWW_Rate'!R14C2:R14C19))+(RC[-1]-300)*2*(INDEX('HU_TD_IB EWW_Rate'!R618C2:R618C19,MATCH(RC[-2],'HU_TD_IB EWW_Rate'!R617C2:R617C19,0))))" & _
+        ""
+Else
+    Range("AO" & i).Value = "=(INDEX('HU_TD_IB EWW_Rate'!R14C2:R614C19,MATCH(Inbound!RC[-1],'HU_TD_IB EWW_Rate'!R14C2:R614C2),MATCH(Inbound!RC[-2],'HU_TD_IB EWW_Rate'!R14C2:R14C19))+(INDEX('HU_TD_IB EWW_Rate'!R14C2:R614C19,MATCH(Inbound!RC[-1],'HU_TD_IB EWW_Rate'!R14C2:R614C2),MATCH(Inbound!RC[-2],'HU_TD_IB EWW_Rate'!R14C2:R14C19))*FSC!R1C2))"
+
+End If
+Next i
+
+Range("AD2").Select
+    ActiveCell.FormulaR1C1 = "=ROUND(RC[11],2)"
+    Selection.Copy
+    Range("AD2:AD" & Lst).Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    
+'    Range("AD2").Select
+'    ActiveCell.FormulaR1C1 = "=RC[-1]=RC[12]"
+'     Selection.Copy
+'    Range("AD2:AD" & Lst).Select
+'    ActiveSheet.Paste
+'    Application.CutCopyMode = False
+'

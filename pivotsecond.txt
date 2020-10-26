@@ -1,0 +1,179 @@
+sub secondpivot()
+sheets("B2win").select
+er = Cells(Rows.Count,2).end(xlup).row
+
+Cells.select
+  Sheets("P2").select
+
+    ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:= _
+        "b2win!R1C1:R" & er &"C17", Version:=6).CreatePivotTable TableDestination:= _
+        "Sheet6!R3C1", TableName:="PivotTable3", DefaultVersion:=6
+    Sheets("P2").Select
+    Cells(3, 1).Select
+    With ActiveSheet.PivotTables("PivotTable3")
+        .ColumnGrand = True
+        .HasAutoFormat = True
+        .DisplayErrorString = False
+        .DisplayNullString = True
+        .EnableDrilldown = True
+        .ErrorString = ""
+        .MergeLabels = False
+        .NullString = ""
+        .PageFieldOrder = 2
+        .PageFieldWrapCount = 0
+        .PreserveFormatting = True
+        .RowGrand = True
+        .SaveData = True
+        .PrintTitles = False
+        .RepeatItemsOnEachPrintedPage = True
+        .TotalsAnnotation = False
+        .CompactRowIndent = 1
+        .InGridDropZones = False
+        .DisplayFieldCaptions = True
+        .DisplayMemberPropertyTooltips = False
+        .DisplayContextTooltips = True
+        .ShowDrillIndicators = True
+        .PrintDrillIndicators = False
+        .AllowMultipleFilters = False
+        .SortUsingCustomLists = True
+        .FieldListSortAscending = False
+        .ShowValuesRow = False
+        .CalculatedMembersInFilters = False
+        .RowAxisLayout xlCompactRow
+    End With
+    With ActiveSheet.PivotTables("PivotTable3").PivotCache
+        .RefreshOnFileOpen = False
+        .MissingItemsLimit = xlMissingItemsDefault
+    End With
+    ActiveSheet.PivotTables("PivotTable3").RepeatAllLabels xlRepeatLabels
+    With ActiveSheet.PivotTables("PivotTable3").PivotFields("TopLevelItem")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    With ActiveSheet.PivotTables("PivotTable3").PivotFields("ComponentItem")
+        .Orientation = xlRowField
+        .Position = 2
+    End With
+    With ActiveSheet.PivotTables("PivotTable3").PivotFields("supplier")
+        .Orientation = xlRowField
+        .Position = 3
+    End With
+    With ActiveSheet.PivotTables("PivotTable3").PivotFields("buyers")
+        .Orientation = xlRowField
+        .Position = 4
+    End With
+    ActiveSheet.PivotTables("PivotTable3").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable3").PivotFields("QuantityRequired"), "Sum of QuantityRequired", _
+        xlSum
+    ActiveSheet.PivotTables("PivotTable3").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable3").PivotFields("UsageQuantity"), "Sum of UsageQuantity", xlSum
+    ActiveSheet.PivotTables("PivotTable3").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable3").PivotFields("AllocatedforReport"), "Sum of AllocatedforReport", _
+        xlSum
+    ActiveSheet.PivotTables("PivotTable3").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable3").PivotFields("Sum of QuantityRequired"), _
+        "Sum of QuantityRequired", xlSum
+    Range("B6").Select
+    With ActiveSheet.PivotTables("PivotTable3")
+        .InGridDropZones = True
+        .RowAxisLayout xlTabularRow
+    End With
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("TopLevelItem").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("Description").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("ComponentItem").Subtotals _
+        = Array(False, False, False, False, False, False, False, False, False, False, False, False _
+        )
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("supplier").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("buyers").Subtotals = Array( _
+        False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("Description2").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("ItemType").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("OrdSys").Subtotals = Array( _
+        False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("QuantityRequired"). _
+        Subtotals = Array(False, False, False, False, False, False, False, False, False, False, _
+        False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("UsageQuantity").Subtotals _
+        = Array(False, False, False, False, False, False, False, False, False, False, False, False _
+        )
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("StockonHand").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("Avail.onHand").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("AllocatedforReport"). _
+        Subtotals = Array(False, False, False, False, False, False, False, False, False, False, _
+        False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("CleantoBuild").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("QuantityShort").Subtotals _
+        = Array(False, False, False, False, False, False, False, False, False, False, False, False _
+        )
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("ConstrItem").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("Planner").Subtotals = Array _
+        (False, False, False, False, False, False, False, False, False, False, False, False)
+    Cells.Select
+    Selection.Copy
+
+sheets("P3").select
+Range("A4").Select
+
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("B:B").Select
+    Application.CutCopyMode = False
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    Range("B4").Select
+    ActiveCell.FormulaR1C1 = "Qty"
+    Range("B5").Select
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-1],MailP1!C[-1]:C,2,0)"
+    Range("B5").Select
+    Selection.Copy
+sheets("P3").select
+ep = Cells(Rows.count,2).end(xlup).row
+
+    
+    Range("B5:B"&ep).Select
+ 
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    Selection.Copy
+Range("B5:B"&ep).Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+  
+    Rows("4:4").Select
+    Application.CutCopyMode = False
+    Selection.AutoFilter
+    Range("B5").Select
+     Selection.AutoFilter Field:=2, Criteria1:="#N/A"
+    Range("B6").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.ClearContents
+    ActiveSheet.ShowAllData
+ 
+
+    Sheets("MailP1").Select
+    Range("C3").Select
+    ActiveCell.FormulaR1C1 = "Remarks"
+    Range("C4").Select
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-2],Sheet7!C[-2],1,0)"
+    Range("C4").Select
+    Selection.Copy
+sheets("P3").select
+ep = Cells(Rows.count,2).end(xlup).row
+
+    
+    Range("C4:C"&ep).Select
+  
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    
+   
+ 
+End Sub

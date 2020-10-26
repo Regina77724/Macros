@@ -1,0 +1,139 @@
+Sub tracking()
+
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+
+MsgBox "Please open the FDM RPA template which you want to update", vbMsgBoxSetForeground, "Tracker_Timisoara"
+Workbooks.Open Application.GetOpenFilename
+MsgBox "Please open your Timisoara Updated Tracker File", vbMsgBoxSetForeground, "Tracker_Timisoara"
+Workbooks.Open Application.GetOpenFilename
+
+     For Each wb In Application.Workbooks
+              If wb.Name Like "Tracker_Timisoara*" Then wb.Activate:
+     Next wb
+    
+Sheets(Array("Air Cargo", "Road Tracker", "Ocean Tracker")).Select
+Sheets(Array("Air Cargo", "Road Tracker", "Ocean Tracker")).Copy Before:=Workbooks("FDM-RPA Template").Sheets(1)
+Workbooks("Tracker_Timisoara").Close savechanges = False
+
+      For Each wb In Application.Workbooks
+               If wb.Name Like "FDM-RPA Template*" Then wb.Activate:
+      Next wb
+
+Sheets("Air Cargo").Select
+Columns("T:T").Select
+Selection.Cut
+Columns("C:C").Select
+Selection.Insert Shift:=xlToRight
+Application.CutCopyMode = False
+Sheets("Road Tracker").Select
+Columns("AH:AH").Select
+Selection.Cut
+Columns("C:C").Select
+Selection.Insert Shift:=xlToRight
+Application.CutCopyMode = False
+Sheets("Ocean Tracker").Select
+ActiveSheet.AutoFilterMode = False
+Columns("Y:Y").Select
+Selection.Cut
+Columns("C:C").Select
+Selection.Insert Shift:=xlToRight
+Application.CutCopyMode = False
+
+Sheets("Consolidated").Activate
+er = Cells(Rows.Count, 13).End(xlUp).Row
+Range("N4").Select
+ActiveCell.FormulaR1C1 = "= IFERROR(VLOOKUP(RC[-1],'Air Cargo'!C[-11]:C[8],14,0),IFERROR(VLOOKUP(Consolidated!RC[-1],'Road Tracker'!C[-11]:C[22],27,0),IFERROR(VLOOKUP(Consolidated!RC[-1],'Ocean Tracker'!C[-11]:C[14],15,0),""Not found"")))"
+Range("N4").Select
+Selection.Copy
+Range("N4:N" & er).Select
+ActiveSheet.Paste
+Application.CutCopyMode = False
+
+Range("Q4").Select
+ActiveCell.FormulaR1C1 = _
+"=IFERROR(VLOOKUP(RC[-4],'Air Cargo'!C[-14]:C[-8],7,0),IFERROR(VLOOKUP(RC[-4],'Road Tracker'!C[-14]:C[13],28,0),IFERROR(VLOOKUP(RC[-4],'Ocean Tracker'!C[-14]:C[1],16,0),""Not found"")))"
+Range("R4").Select
+ActiveCell.FormulaR1C1 = _
+"= IFERROR(VLOOKUP(RC[-5],'Air Cargo'!C[-15]:C[-8],8,0),IFERROR(VLOOKUP(RC[-5],'Road Tracker'!C[-15]:C[-9],7,0),IFERROR(VLOOKUP(RC[-5],'Ocean Tracker'!C[-15]:C[-9],7,0),""Not found"")))"
+Range("S4").Select
+ActiveCell.FormulaR1C1 = _
+"= IFERROR(VLOOKUP(RC[-6],'Air Cargo'!C[-16]:C[-8],9,0),IFERROR(VLOOKUP(RC[-6],'Road Tracker'!C[-16]:C[-9],8,0),IFERROR(VLOOKUP(RC[-6],'Ocean Tracker'!C[-16]:C[-9],8,0),""Not found"")))"
+
+Range("Q4:S4").Select
+Selection.Copy
+Range("Q4:S" & er).Select
+ActiveSheet.Paste
+Application.CutCopyMode = False
+
+Range("Y4").Select
+ActiveCell.FormulaR1C1 = _
+"= IFERROR(VLOOKUP(RC[-12],'Air Cargo'!C[-22]:C[-13],10,0),IFERROR(VLOOKUP(RC[-12],'Road Tracker'!C[-22]:C[2],25,0),IFERROR(VLOOKUP(RC[-12],'Ocean Tracker'!C[-22]:C[-6],17,0),""Not found"")))"
+Range("Y4").Select
+Selection.Copy
+Range("Y4:Y" & er).Select
+ActiveSheet.Paste
+Application.CutCopyMode = False
+
+MsgBox "Please open your Updated FDM Tabs File", vbMsgBoxSetForeground, "FDM Tabs"
+Workbooks.Open Application.GetOpenFilename
+Sheets(Array("Sheet1")).Select
+Sheets(Array("Sheet1")).Copy Before:=Workbooks("FDM-RPA Template").Sheets(1)
+Workbooks("FDM Tabs").Close savechanges = False
+
+      For Each wb In Application.Workbooks
+               If wb.Name Like "FDM-RPA Template*" Then wb.Activate:
+      Next wb
+
+Sheets("Consolidated").Activate
+Range("O4").Select
+ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-1],Sheet1!C[-14]:C[-11],2,0)"
+Range("P4").Select
+ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-2],Sheet1!C[-15]:C[-13],3,0)"
+Range("O4:P4").Select
+Selection.Copy
+Range("O4:P" & er).Select
+ActiveSheet.Paste
+Application.CutCopyMode = False
+Sheets("Consolidated").Cells.Copy
+Sheets("Consolidated").Cells.PasteSpecial Paste:=xlPasteValues
+Application.CutCopyMode = False
+Sheets("Sheet1").Delete
+
+MsgBox "Please open your Updated Analysis File", vbMsgBoxSetForeground
+Workbooks.Open Application.GetOpenFilename
+Sheets(Array("Sheet1")).Select
+Sheets(Array("Sheet1")).Copy Before:=Workbooks("FDM-RPA Template").Sheets(1)
+Workbooks("Analysis macro file").Close savechanges = False
+
+      For Each wb In Application.Workbooks
+               If wb.Name Like "FDM-RPA Template*" Then wb.Activate:
+      Next wb
+Sheets("Consolidated").Activate
+Range("V4").Select
+ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-9],Sheet1!C[-21]:C[-18],4,0)"
+Range("W4").Select
+ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-10],Sheet1!C[-22]:C[-17],6,0)"
+Range("V4:W4").Select
+Selection.Copy
+Range("V4:W" & er).Select
+ActiveSheet.Paste
+Application.CutCopyMode = False
+
+
+Sheets("Consolidated").Cells.Copy
+Sheets("Consolidated").Cells.PasteSpecial Paste:=xlPasteValues
+Application.CutCopyMode = False
+Sheets("Sheet1").Delete
+Sheets("Air Cargo").Delete
+Sheets("Road Tracker").Delete
+Sheets("Ocean Tracker").Delete
+ActiveWorkbook.Save
+ActiveWorkbook.Close
+MsgBox "Program Done"
+Application.DisplayAlerts = True
+Application.ScreenUpdating = True
+    
+    
+    
+End Sub

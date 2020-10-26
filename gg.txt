@@ -1,0 +1,8 @@
+Sheets("Details").Select
+Range("B6").Select
+ActiveCell.FormulaR1C1 = Mid(myValue, 5, 8)
+Range("C6").Select
+ActiveCell.FormulaR1C1 = Mid(myValue, 1, 3)
+Sheets("QSCOREN").Select
+Range("G6").Select
+ActiveCell.FormulaR1C1 = Mid(myValue, 14, 8)

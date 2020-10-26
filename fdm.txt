@@ -1,0 +1,60 @@
+Sub trt()
+
+Dim wbk As Workbook
+wb = ActiveWorkbook.Name
+Dim Filename As String
+Dim Path As String
+Path = "C:\Users\punnilen\Desktop\Planning Task\TRT Data\"
+Filename = Dir(Path & "*.xlsx")
+
+Application.DisplayAlerts = False
+Do While Len(Filename) > 0 'IF NEXT FILE EXISTS THEN
+    Set wbk = Workbooks.Open(Path & Filename)
+
+ ActiveSheet.Name = "Main"
+ Sheets.Add
+ ActiveSheet.Range("A1").Value = "Supplier Name"
+ ActiveSheet.Range("B1").Value = "BUYFROMBP"
+ ActiveSheet.Range("C1").Value = "PO nr."
+ ActiveSheet.Range("D1").Value = "CPC"
+ ActiveSheet.Range("E1").Value = "Line no."
+ ActiveSheet.Range("F1").Value = "Line date"
+ ActiveSheet.Range("G1").Value = "Item code"
+ ActiveSheet.Range("H1").Value = "Qty"
+ ActiveSheet.Range("I1").Value = "PO unit price"
+ ActiveSheet.Range("J1").Value = "PO value in $"
+ Worksheets("Sheet1").Range("A2:A100").Value = Worksheets("Main").Range("M2:M100").Value 'Supplier Name
+ Worksheets("Sheet1").Range("B2:B100").Value = Worksheets("Main").Range("J2:J100").Value 'BUYFROMBP
+ Worksheets("Sheet1").Range("C2:C100").Value = Worksheets("Main").Range("D2:D100").Value 'PO nr.
+ Worksheets("Sheet1").Range("D2:D100").Value = Worksheets("Main").Range("A2:A100").Value 'CPC
+ Worksheets("Sheet1").Range("E2:E100").Value = Worksheets("Main").Range("E2:E100").Value 'Line no.
+ 'Worksheets("Sheet1").Range("F2:F100").Value = Worksheets("Main").Range("M2:M100").Value 'Line date
+ Worksheets("Sheet1").Range("G2:G100").Value = Worksheets("Main").Range("B2:B100").Value 'Item code
+ Worksheets("Sheet1").Range("H2:H100").Value = Worksheets("Main").Range("H2:H100").Value 'Qty
+ Worksheets("Sheet1").Range("I2:I100").Value = Worksheets("Main").Range("F2:F100").Value 'PO unit price
+ Worksheets("Sheet1").Range("J2:J100").Value = Worksheets("Main").Range("I2:I100").Value 'PO value in $
+ 
+    Worksheets("Sheet1").Activate
+    Range("A1").Select
+    Application.CutCopyMode = False
+    Lst = Range("A9000").End(xlUp).Row
+    Range("A3:R" & Lst).Select
+    Selection.Copy
+      
+    Application.DisplayAlerts = False
+    ActiveWorkbook.Close Save = False
+    Application.DisplayAlerts = False
+    Windows(wb).Activate
+    Sheets(1).Select
+       Lst = Range("A9000").End(xlUp).Row
+       er = Lst + 1
+    Range("A" & er).Select
+    ActiveSheet.Paste
+
+    Application.CutCopyMode = False
+    wbk.Close True
+    Filename = Dir
+    Application.DisplayAlerts = True
+Loop
+ 
+End Sub

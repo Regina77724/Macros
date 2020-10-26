@@ -1,0 +1,204 @@
+Sub CarrierReport()
+
+Dim Sht As Worksheet
+Dim TArgtSht As Worksheet
+Dim Wbk As Workbook
+Dim Rng As Range
+Dim Rng1 As Range
+Dim Path As String
+Dim Rng2 As Range
+Dim Lr As Integer
+Dim Awb As Variant
+Dim D As Integer
+Dim RngD As Range
+Dim Stime As Date
+Dim Etime As Date
+
+
+    Stime = Time
+Path = "C:\Users\punniloh\Box Sync\LogisticsDec18\New folder (3)\New folder (3)\Raw Files\"
+DescPath = "C:\Users\punniloh\Box Sync\LogisticsDec18\New folder (3)\New folder (3)\Analysis Files"
+        
+    Filename = Dir(Path)
+    Lr2 = Backup.Cells(Rows.Count, 2).End(xlUp).Row
+    
+Do Until Filename = ""
+    x = Split(Filename, ".")
+    Set Sht = ThisWorkbook.Sheets(x(0))
+    
+    Application.DisplayAlerts = False
+    
+    Set Wbk = Workbooks.Open(Path & Filename)
+    
+    Application.DisplayAlerts = True
+    Set TArgtSht = Wbk.Sheets(1)
+    With Backup
+        Set Sht = ThisWorkbook.Worksheets(x(0))
+        .Range("E1") = Sht.Name
+        .Range("F1") = Application.WorksheetFunction.VLookup(.Range("$E$1").Value, .Range("$A$1:$B$30").Value, 2, 0)
+        Awb = .Range("F1") + 1
+    End With
+    Lr = Sht.Cells(Rows.Count, 1).End(xlUp).Row + 1
+    'pasting the data from weekly reports
+           With TArgtSht
+           
+                Set Rng = .Range("A1").CurrentRegion.Offset(1)
+                Rng.Copy
+           End With
+           With Sht
+                .Range("A" & Lr).PasteSpecial xlPasteValues
+                'counting again the rows
+                Lr1 = Sht.Cells(Rows.Count, 1).End(xlUp).Row - 1
+                'Delete duplicates and formatting
+                .Range("A:A").Columns.Insert
+                .Range("A1").Value = 1
+                    
+                For r = 2 To Lr1
+                    .Range("A" & r) = r
+                    
+                Next
+                
+                .Range("A1").CurrentRegion.Columns.AutoFit
+                .Range("A1").CurrentRegion.Sort Sht.Range("A1"), xlDescending, Header:=xlYes
+                .Range("A1").CurrentRegion.RemoveDuplicates Awb, xlYes
+                .Range("A:A").Delete
+                Wbk.Close False
+           If Sht.Name = "TNT" Then
+                    Lr = Sht.Cells(Rows.Count, 1).End(xlUp).Row
+                    For D = 2 To Lr
+                        .Range("EE" & D).Value = .Range("R" & D).Value
+                        .Range("EF" & D).Value = 1
+                    Next
+                End If
+                
+                If Sht.Name = "DHL Express" Then
+                    Lr = Sht.Cells(Rows.Count, 1).End(xlUp).Row
+                    For D = 2 To Lr
+                        .Range("EE" & D).Value = .Range("Z" & D).Value
+                        
+                    Next
+                End If
+                
+                If Sht.Name = "Fedex" Then
+                    Lr = Sht.Cells(Rows.Count, 1).End(xlUp).Row
+                    For D = 2 To Lr
+                        .Range("EE" & D).Value = .Range("AH" & D).Value
+                        
+                    Next
+                    
+                End If
+                
+                
+                
+                'Deleting blanks and other values
+                MyArr1 = Array("cverr(xlerrna)", "", " ", 0, "#VALUE!")
+                    For D = LBound(MyArr1) To UBound(MyArr1)
+                        SearchValue2 = MyArr1(D)
+                        Set RngD1 = .Range("A1:XFD1")
+                        MyArr2 = Array("HAWB", "SHIP DATE", "ACTUAL WEIGHT", "CHARGEABLE WEIGHT", "Nr of pcs", "Transport charges")
+                                For f = LBound(MyArr2) To UBound(MyArr2)
+                                    SearchValue = MyArr2(f)
+                                    Set RngDelete = RngD1.Find(SearchValue, , , xlWhole)
+                                    If Not RngDelete Is Nothing Then
+                                        E = RngDelete.Column
+                                    End If
+                                    Lrn = .Cells(Rows.Count, 1).End(xlUp).Row
+                                      For n = 2 To Lrn
+                                          If IsError(.Cells(n, E).Value) Then
+                                        
+                                            If RngD Is Nothing Then
+                                                 Set RngD = .Cells(n, E)
+                                            Else
+                                                Set RngD = Union(RngD, .Cells(n, E))
+                                            End If
+                                            
+                                          ElseIf .Cells(n, E).Value < 0 Then
+                                              If RngD Is Nothing Then
+                                                 Set RngD = .Cells(n, E)
+                                            Else
+                                                Set RngD = Union(RngD, .Cells(n, E))
+                                              End If
+                                            
+
+                                          Else
+                                          
+                                            If .Cells(n, E).Value = SearchValue2 Then
+                                              If RngD Is Nothing Then
+                                                 Set RngD = .Cells(n, E)
+                                            Else
+                                                Set RngD = Union(RngD, .Cells(n, E))
+                                              End If
+                                            End If
+                                          End If
+                                          
+                                      Next
+                                
+                                
+                                If Not RngD Is Nothing Then
+                                                                        
+                                        RngD.EntireRow.Delete
+                                        Set RngD = Nothing
+                                        End If
+                                Next
+                                
+                      Next
+     
+                ' Analysis part combining the sheets
+                
+                Set RngD1 = .Range("A1:XFD1")
+                Lr1 = Sht.Cells(Rows.Count, 1).End(xlUp).Row - 1
+                MyArr = Array("HAWB", "SHIP DATE", "ACTUAL WEIGHT", "CHARGEABLE WEIGHT", "Nr of pcs", "Transport charges")
+                     For i = LBound(MyArr) To UBound(MyArr)
+                            SearchValue = MyArr(i)
+                         
+                            Set Rng1 = RngD1.Find(SearchValue, , , xlWhole)
+                            If Not Rng1 Is Nothing Then
+                                D = Rng1.Column
+                                Set RngAnalysis = Analysis.Range("1:1")
+                                Set Rng2 = RngAnalysis.Find(SearchValue, , , xlWhole)
+                                LrAnalysis = Rng2.Cells(Rows.Count, 1).End(xlUp).Row
+                                Rng1.Offset(1).Resize(Lr1).Copy
+                                Rng2.Offset(LrAnalysis).PasteSpecial xlPasteValues
+                                ShtAnalysis = Analysis.Cells(Rows.Count, 1).End(xlUp).Row
+                                Analysis.Range("G" & LrAnalysis + 1).Resize((ShtAnalysis - LrAnalysis)).Value = Sht.Name
+                            End If
+                    Next
+                End With
+            
+                
+    
+    
+    Filename = Dir
+
+Loop
+    'Splitting the files as per the forwarder wise
+        With Backup
+             Set RngSplit = Analysis.Range("A1").CurrentRegion
+            .Range("T1").CurrentRegion.Offset(1).Clear
+             RngSplit.AdvancedFilter xlFilterCopy, Range("Forwarder"), Range("Forwarder"), True
+            .Range("T1").CurrentRegion.Sort .Range("T1"), xlAscending, Header:=xlYes
+             Lr = .Cells(Rows.Count, 1).End(xlUp).Row
+            
+               For i = 2 To Lr
+                .Range("V2").Value = .Range("A" & i).Value
+                Set Wbk1 = Workbooks.Add
+                Set Sht2 = Wbk1.Sheets(1)
+                Sht2.Name = .Range("V2").Value
+                
+                RngSplit.AdvancedFilter xlFilterCopy, .Range("V1:V2"), Sht2.Range("A1")
+                
+                
+                
+        Wbk1.SaveAs DescPath & .Range("V2").Value & ".xls"
+        Wbk1.Close True
+    Next
+    End With
+    Etime = Time
+    Ttime = Etime - Stime
+                
+    MsgBox "Preparation of Carrier Report took " & Format((Etime - Stime), "HH:MM:SS") & "."
+                
+
+End Sub
+
+

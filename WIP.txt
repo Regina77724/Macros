@@ -1,0 +1,101 @@
+Sub Invageprocess()
+'
+' Invageprocess Macro
+'
+
+'
+    Columns("A:A").Select
+    Selection.TextToColumns Destination:=Range("A1"), DataType:=xlDelimited, _
+        TextQualifier:=xlDoubleQuote, ConsecutiveDelimiter:=False, Tab:=True, _
+        Semicolon:=False, Comma:=False, Space:=False, Other:=True, OtherChar _
+        :="|", FieldInfo:=Array(Array(1, 1), Array(2, 1), Array(3, 1), Array(4, 1), Array(5, _
+        1), Array(6, 1), Array(7, 1), Array(8, 1), Array(9, 1), Array(10, 1), Array(11, 1), Array(12 _
+        , 1), Array(13, 1), Array(14, 1), Array(15, 1), Array(16, 1), Array(17, 1), Array(18, 1), _
+        Array(19, 1), Array(20, 1), Array(21, 1), Array(22, 1), Array(23, 1), Array(24, 1), Array( _
+        25, 1), Array(26, 1), Array(27, 1), Array(28, 1), Array(29, 1), Array(30, 1), Array(31, 1), _
+        Array(32, 1)), TrailingMinusNumbers:=True
+    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    Rows("1:1").Select
+    Selection.AutoFilter
+    ActiveSheet.Range("$A$1:$AF$59918").AutoFilter Field:=3, Criteria1:="="
+    Rows("59918:59918").Select
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    Range("C1").Select
+    Selection.AutoFilter
+    Selection.AutoFilter
+    Selection.AutoFilter
+    ActiveSheet.Range("$A$1:$AF$59917").AutoFilter Field:=3, Criteria1:=Array( _
+        "746MH1", "746MH2", "746MH3", "746MT1", "746MT2", "898M51", "898M53", "898M54", _
+        "898M56", "898M57", "898M58", "898M59", "898M60", "898M61", "898M62", "898M63", _
+        "898M64"), Operator:=xlFilterValues
+    Rows("2:2").Select
+    Selection.AutoFilter
+    Range("C1").Select
+    Selection.AutoFilter
+    ActiveSheet.Range("$A$1:$AF$59917").AutoFilter Field:=3, Criteria1:= _
+        "=*898M*", Operator:=xlAnd
+    Rows("2:2").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveWindow.SmallScroll Down:=-18
+    Columns("S:S").Select
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    Range("S2").Select
+    ActiveCell.FormulaR1C1 = "=RC[-3]+RC[-1]"
+    Range("S2").Select
+    Selection.AutoFill Destination:=Range("S2:S59339")
+    Range("S2:S59339").Select
+    Selection.Copy
+    Range("P2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("R:S").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlToLeft
+    ActiveWindow.ScrollColumn = 2
+    ActiveWindow.ScrollColumn = 3
+    ActiveWindow.ScrollColumn = 4
+    ActiveWindow.ScrollColumn = 5
+    ActiveWindow.ScrollColumn = 6
+    ActiveWindow.ScrollColumn = 7
+    ActiveWindow.ScrollColumn = 8
+    ActiveWindow.ScrollColumn = 9
+    ActiveWindow.ScrollColumn = 10
+    ActiveWindow.ScrollColumn = 11
+    ActiveWindow.ScrollColumn = 12
+    ActiveWindow.ScrollColumn = 13
+    ActiveWindow.ScrollColumn = 14
+    Range("AF2").Select
+    ActiveCell.FormulaR1C1 = "=RC[-3]+RC[-1]"
+    Range("AF2").Select
+    Selection.AutoFill Destination:=Range("AF2:AF59339")
+    Range("AF2:AF59339").Select
+    Selection.Copy
+    Range("AC2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("AE:AF").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlToLeft
+    Columns("T:AD").Select
+    ActiveWindow.ScrollColumn = 13
+    ActiveWindow.ScrollColumn = 12
+    ActiveWindow.ScrollColumn = 11
+    ActiveWindow.ScrollColumn = 10
+    ActiveWindow.ScrollColumn = 9
+    ActiveWindow.ScrollColumn = 8
+    ActiveWindow.ScrollColumn = 7
+    ActiveWindow.ScrollColumn = 6
+    ActiveWindow.ScrollColumn = 5
+    ActiveWindow.ScrollColumn = 4
+    ActiveWindow.ScrollColumn = 3
+    ActiveWindow.ScrollColumn = 2
+    ActiveWindow.ScrollColumn = 1
+    Columns("G:Q").Select
+End Sub
+''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''

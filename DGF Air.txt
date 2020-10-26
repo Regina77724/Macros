@@ -1,0 +1,173 @@
+Sub Process()
+wb = ActiveWorkbook.Name
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+Namrata = Time
+
+Sheets("DGF Air").Select
+If ActiveSheet.AutoFilterMode Then ActiveSheet.ShowAllData
+Dim myValue As Variant
+myValue = InputBox("Enter month and Quater in Format as Example Nov Q3 FY19 (Nov 2018)")
+Range("A1:O1").Select
+ActiveCell.FormulaR1C1 = "DGF" & myValue & "-heavy airfreight"
+
+Sheets("DGF In").Select
+If ActiveSheet.AutoFilterMode Then ActiveSheet.ShowAllData
+Range("A1:O1").Select
+ActiveCell.FormulaR1C1 = "DGF Partner " & myValue & "-heavy airfreight"
+If ActiveCell.FormulaR1C1 = "False" Then
+Sheets("Main").Selects
+
+Sheets("DGF Out").Select
+If ActiveSheet.AutoFilterMode Then ActiveSheet.ShowAllData
+Range("A1:O1").Select
+ActiveCell.FormulaR1C1 = "DGF" & myValue & "-heavy airfreight"
+Sheets("DGF Air").Select
+Range("A5").Select
+myWk1 = InputBox("Enter 1st week")
+ActiveCell.FormulaR1C1 = "wk" & myWk1
+Range("A6").Select
+myWk2 = InputBox("Enter 2nd week")
+ActiveCell.FormulaR1C1 = "wk" & myWk2
+Range("A7").Select
+myWk3 = InputBox("Enter 3rd week")
+ActiveCell.FormulaR1C1 = "wk" & myWk3
+Range("A8").Select
+myWk4 = InputBox("Enter 4th week")
+ActiveCell.FormulaR1C1 = "wk" & myWk4
+Range("A9").Select
+myWk5 = InputBox("Enter 5th week")
+ActiveCell.FormulaR1C1 = "wk" & myWk5
+Windows(wb).Activate
+Sheets("RawInput").Select
+ActiveSheet.AutoFilterMode = False
+
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 2 Then
+Range("A2:AO" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+Sheets("DGF Reo In").Select
+ActiveSheet.AutoFilterMode = False
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 2 Then
+Range("A2:BT" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+Sheets("DGF Rep Out").Select
+ActiveSheet.AutoFilterMode = False
+Cells(1, 1).Select
+er = Cells(Rows.Count, 2).End(xlUp).Row
+If er > 2 Then
+Range("A2:AO" & er).Select
+Selection.ClearContents
+End If
+Cells(1, 1).Select
+
+Sheets("Main").Select
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+MsgBox "Please Select OTD File Saved In Your System"
+
+varfile = Application.GetOpenFilename
+If varfile = "False" Then
+Sheets("Main").Select
+
+MsgBox "User Canceled the required Action"
+
+Exit Sub
+End If
+
+Workbooks.Open varfile
+
+st = Len(varfile)
+    S = 0
+    MyPos = 0
+    SearchString = varfile
+    SearchChar = "\"
+    cnt = 0
+
+Do While S <= st
+    MyPos = InStr(1, SearchString, SearchChar, 1)
+    If MyPos <> 0 Then
+    remchar = Mid(SearchString, MyPos + 1, st)
+    SearchString = remchar
+    S = S + MyPos
+    Else
+    GoTo nxt:
+    End If
+Loop
+
+nxt:
+        dirpathlen = Len(varfile) - Len(SearchString)
+        Path = Mid(varfile, 1, dirpathlen)
+
+wb1 = ActiveWorkbook.Name
+Sheets("DGF Air").Select
+ActiveSheet.AutoFilterMode = False
+
+er = Cells(Rows.Count, 2).End(xlUp).Row
+Range("A2:BT" & er).Select
+Selection.Copy
+ Windows(wb).Activate
+ Sheets("RawInput").Select
+Range("A2").Select
+ Selection.PasteSpecial Paste:=xlPasteValuesAndNumberFormats, Operation:= _
+        xlNone, SkipBlanks:=False, Transpose:=False
+        Application.CutCopyMode = False
+Windows(wb1).Close
+Sheets("RawInput").Select
+Lsta = Range("Y9000").End(xlUp).Row
+Range("A2:BS" & Lsta).Select
+Selection.Copy
+Sheets("DGF Reo In").Select
+Range("A2").Select
+ActiveSheet.Paste
+Sheets("RawInput").Select
+Lstb = Range("A9000").End(xlUp).Row
+Lstc = Lsta + 4
+Range("A" & Lstc & ":X" & Lstb).Select
+Selection.Copy
+Sheets("DGF Rep Out").Select
+Range("A2").Select
+ActiveSheet.Paste
+Sheets("DGF Reo In").Select
+er = Range("A9000").End(xlUp).Row
+
+Range("BT2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=1+WEEKNUM(RC[-43])-(WEEKNUM(DATE(YEAR(RC[-43]),LOOKUP(MONTH(RC[-43]),{1,4,7,10}),1)))"
+         Selection.NumberFormat = "General"
+   Selection.Copy
+   Range("BT2:BT" & er).Select
+   ActiveSheet.Paste
+   
+   Application.CutCopyMode = False
+    Sheets("DGF Rep Out").Select
+    ec = Range("A9000").End(xlUp).Row
+    Range("Y2").Select
+    ActiveCell.FormulaR1C1 = _
+        "=1+WEEKNUM(RC[-12])-(WEEKNUM(DATE(YEAR(RC[-12]),LOOKUP(MONTH(RC[-12]),{1,4,7,10}),1)))"
+    Range("Y2").Select
+    Selection.NumberFormat = "General"
+    Selection.Copy
+    
+    Range("Y2:Y" & ec).Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    
+    
+    Sheets(Array("QSCOREN", "Details", "DGF Air", "DGF In", "DGF Out", "DGF Reo In", _
+        "DGF Rep Out", "Delay codes")).Select
+    Sheets("Delay codes").Activate
+    Sheets(Array("QSCOREN", "Details", "DGF Air", "DGF In", "DGF Out", "DGF Reo In", _
+        "DGF Rep Out", "Delay codes")).Copy
+    MsgBox "Macro Completed And Final Report Generated in New Excel and Total Time Taken " & Format(Time - Namrata, "HH:MM:SS"), vbInformation, "Timer!"
+    
+End Sub

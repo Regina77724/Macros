@@ -1,0 +1,407 @@
+Sub Macro2()
+''''''''''''''''''first Pivot''''''''''''''''''''''
+sheets("MailRaw").select
+Lst = Cells(Rows.Count, 2).End(xlUp).Row
+
+    Range("A1:O1" & Lst).Select
+    ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:= _
+        "MailRaw!R1C1:R" & Lst & "C15", Version:=6).CreatePivotTable TableDestination:= _
+        "MailP1!R3C1", TableName:="PivotTable2", DefaultVersion:=6
+    Sheets("MailP1").Select
+    Cells(3, 1).Select
+    With ActiveSheet.PivotTables("PivotTable2")
+        .ColumnGrand = True
+        .HasAutoFormat = True
+        .DisplayErrorString = False
+        .DisplayNullString = True
+        .EnableDrilldown = True
+        .ErrorString = ""
+        .MergeLabels = False
+        .NullString = ""
+        .PageFieldOrder = 2
+        .PageFieldWrapCount = 0
+        .PreserveFormatting = True
+        .RowGrand = True
+        .SaveData = True
+        .PrintTitles = False
+        .RepeatItemsOnEachPrintedPage = True
+        .TotalsAnnotation = False
+        .CompactRowIndent = 1
+        .InGridDropZones = False
+        .DisplayFieldCaptions = True
+        .DisplayMemberPropertyTooltips = False
+        .DisplayContextTooltips = True
+        .ShowDrillIndicators = True
+        .PrintDrillIndicators = False
+        .AllowMultipleFilters = False
+        .SortUsingCustomLists = True
+        .FieldListSortAscending = False
+        .ShowValuesRow = False
+        .CalculatedMembersInFilters = False
+        .RowAxisLayout xlCompactRow
+    End With
+    With ActiveSheet.PivotTables("PivotTable2").PivotCache
+        .RefreshOnFileOpen = False
+        .MissingItemsLimit = xlMissingItemsDefault
+    End With
+    ActiveSheet.PivotTables("PivotTable2").RepeatAllLabels xlRepeatLabels
+    With ActiveSheet.PivotTables("PivotTable2").PivotFields("FLEX Part number")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    ActiveSheet.PivotTables("PivotTable2").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable2").PivotFields("openqty"), "Sum of openqty", xlSum
+Cells.Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+''''''''''''''''b2win data formatting''''''''''''''
+    Sheets("b2win").Select
+Lstb=Cells(Rows.Count, 2).End(xlUp).Row
+    Cells.Select
+    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    Rows("1:1").Select
+    Application.CutCopyMode = False
+    Selection.AutoFilter
+   Selection.AutoFilter Field:=5, Criteria1:="<>Purch" _
+        , Operator:=xlAnd
+    Lb =Cells(Rows.Count, 2).End(xlUp).Row
+    If Lb > 1 Then
+    Rows("2:" & Lb).Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Delete Shift:=xlUp
+    End If
+
+    Selection.AutoFilter
+    
+    Columns("D:E").Select
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+  Sheets("b2win").Select
+Lstb=Cells(Rows.Count, 2).End(xlUp).Row
+    Range("D1").Select
+    ActiveCell.FormulaR1C1 = "supplier"
+    Range("E1").Select
+    ActiveCell.FormulaR1C1 = "buyers"
+    Range("D2").Select
+    Application.CutCopyMode = False
+    Application.CutCopyMode = False
+     ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-1],ISI!C[-3]:C[10],14,0)"
+selection.copy
+Range("D2:D"&Lstb).select
+ActiveSheet.Paste
+ 
+    Range("E2").Select
+    Application.CutCopyMode = False
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-2],ISI!C[-4]:C[6],11,0)"
+    Selection.AutoFill Destination:=Range("E2:E248")
+    Range("E2:E248").Select
+    ActiveWindow.SmallScroll Down:=69
+  
+    Columns("D:E").Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("E:E").Select
+    Application.CutCopyMode = False
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    Columns("D:D").Select
+    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    Selection.Replace What:="  ", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    ActiveWindow.SmallScroll Down:=-9
+    Range("E2").Select
+    Application.CutCopyMode = False
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-1],JIT!C[-4],1,0)"
+    Selection.AutoFill Destination:=Range("E2:E248")
+    Range("E2:E248").Select
+ 
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Rows("1:1").Select
+    Application.CutCopyMode = False
+    Selection.AutoFilter
+   
+    ActiveSheet.Range("$A$1:$R$248").AutoFilter Field:=5, Criteria1:=Array( _
+        "ASIAPLASTICMFG.CO.,(PTE)LTD", "COUNTYENTERPRISES", _
+        "DSNADVANCEDTECHNOLOGY(M)SDNBHD", "FAGERDALASINGAPOREPTELTD", "HyperPackaging", _
+        "JEBSEN&JESSENPACKAGING(S)PTELTD", "PLLPACKAGINGSDNBHD", "SEALEDAIR(S)PTELTD", _
+        "SUNSTREAMINDUSTRIESPTELTD", "XCELINDUSTRIALSUPPLIESPTELTD", _
+        "XPACTECHNOLOGIESPTELTD"), Operator:=xlFilterValues
+    ActiveWindow.ScrollColumn = 4
+    ActiveWindow.ScrollColumn = 2
+    Rows("3:3").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    Rows("1:1").Select
+    Selection.AutoFilter
+    Range("J3").Select
+   
+    Columns("E:E").Select
+    Selection.Delete Shift:=xlToLeft
+    ActiveWindow.ScrollColumn = 3
+    ActiveWindow.ScrollColumn = 2
+    ActiveWorkbook.Worksheets("b2win").AutoFilter.Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("b2win").AutoFilter.Sort.SortFields.Add2 Key:=Range _
+        ("C1"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+        xlSortNormal
+    With ActiveWorkbook.Worksheets("b2win").AutoFilter.Sort
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+   
+    Range("M2").Select
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = "=RC[-1]-RC[-4]"
+    Range("M3").Select
+    ActiveSheet.Paste
+    ActiveCell.FormulaR1C1 = "=IF(RC[-10]=R[-1]C[-10],R[-1]C-RC[-4],RC[-1]-RC[-4])"
+    Range("M3").Select
+   
+    Selection.Copy
+    Range("L3").Select
+    Selection.End(xlDown).Select
+    Range("M197").Select
+    Range(Selection, Selection.End(xlUp)).Select
+    Range("M3:M197").Select
+    Range("M197").Activate
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    Columns("M:M").Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Range("M3").Select
+    ActiveSheet.Range("$A$1:$Q$197").AutoFilter Field:=13, Criteria1:=">=0", _
+        Operator:=xlAnd
+    ActiveWindow.SmallScroll Down:=-12
+    Rows("2:2").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    ActiveWorkbook.Worksheets("b2win").AutoFilter.Sort.SortFields.Clear
+    ActiveSheet.ShowAllData
+    Range("L183").Select
+   
+    Range("M2").Select
+    ActiveWindow.SmallScroll Down:=-33
+    Range("A1").Select
+    Range(Selection, Selection.End(xlToRight)).Select
+    Range(Selection, Selection.End(xlDown)).Select
+    ActiveWindow.SmallScroll Down:=3
+    Sheets.Add
+    ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:= _
+        "b2win!R1C1:R31C17", Version:=6).CreatePivotTable TableDestination:= _
+        "Sheet6!R3C1", TableName:="PivotTable3", DefaultVersion:=6
+    Sheets("Sheet6").Select
+    Cells(3, 1).Select
+    With ActiveSheet.PivotTables("PivotTable3")
+        .ColumnGrand = True
+        .HasAutoFormat = True
+        .DisplayErrorString = False
+        .DisplayNullString = True
+        .EnableDrilldown = True
+        .ErrorString = ""
+        .MergeLabels = False
+        .NullString = ""
+        .PageFieldOrder = 2
+        .PageFieldWrapCount = 0
+        .PreserveFormatting = True
+        .RowGrand = True
+        .SaveData = True
+        .PrintTitles = False
+        .RepeatItemsOnEachPrintedPage = True
+        .TotalsAnnotation = False
+        .CompactRowIndent = 1
+        .InGridDropZones = False
+        .DisplayFieldCaptions = True
+        .DisplayMemberPropertyTooltips = False
+        .DisplayContextTooltips = True
+        .ShowDrillIndicators = True
+        .PrintDrillIndicators = False
+        .AllowMultipleFilters = False
+        .SortUsingCustomLists = True
+        .FieldListSortAscending = False
+        .ShowValuesRow = False
+        .CalculatedMembersInFilters = False
+        .RowAxisLayout xlCompactRow
+    End With
+    With ActiveSheet.PivotTables("PivotTable3").PivotCache
+        .RefreshOnFileOpen = False
+        .MissingItemsLimit = xlMissingItemsDefault
+    End With
+    ActiveSheet.PivotTables("PivotTable3").RepeatAllLabels xlRepeatLabels
+    With ActiveSheet.PivotTables("PivotTable3").PivotFields("TopLevelItem")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    With ActiveSheet.PivotTables("PivotTable3").PivotFields("ComponentItem")
+        .Orientation = xlRowField
+        .Position = 2
+    End With
+    With ActiveSheet.PivotTables("PivotTable3").PivotFields("supplier")
+        .Orientation = xlRowField
+        .Position = 3
+    End With
+    With ActiveSheet.PivotTables("PivotTable3").PivotFields("buyers")
+        .Orientation = xlRowField
+        .Position = 4
+    End With
+    ActiveSheet.PivotTables("PivotTable3").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable3").PivotFields("QuantityRequired"), "Sum of QuantityRequired", _
+        xlSum
+    ActiveSheet.PivotTables("PivotTable3").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable3").PivotFields("UsageQuantity"), "Sum of UsageQuantity", xlSum
+    ActiveSheet.PivotTables("PivotTable3").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable3").PivotFields("AllocatedforReport"), "Sum of AllocatedforReport", _
+        xlSum
+    ActiveSheet.PivotTables("PivotTable3").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable3").PivotFields("Sum of QuantityRequired"), _
+        "Sum of QuantityRequired", xlSum
+    Range("B6").Select
+    With ActiveSheet.PivotTables("PivotTable3")
+        .InGridDropZones = True
+        .RowAxisLayout xlTabularRow
+    End With
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("TopLevelItem").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("Description").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("ComponentItem").Subtotals _
+        = Array(False, False, False, False, False, False, False, False, False, False, False, False _
+        )
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("supplier").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("buyers").Subtotals = Array( _
+        False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("Description2").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("ItemType").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("OrdSys").Subtotals = Array( _
+        False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("QuantityRequired"). _
+        Subtotals = Array(False, False, False, False, False, False, False, False, False, False, _
+        False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("UsageQuantity").Subtotals _
+        = Array(False, False, False, False, False, False, False, False, False, False, False, False _
+        )
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("StockonHand").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("Avail.onHand").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("AllocatedforReport"). _
+        Subtotals = Array(False, False, False, False, False, False, False, False, False, False, _
+        False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("CleantoBuild").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("QuantityShort").Subtotals _
+        = Array(False, False, False, False, False, False, False, False, False, False, False, False _
+        )
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("ConstrItem").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable3").PivotFields("Planner").Subtotals = Array _
+        (False, False, False, False, False, False, False, False, False, False, False, False)
+    Cells.Select
+    Selection.Copy
+    Sheets.Add After:=ActiveSheet
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("B:B").Select
+    Application.CutCopyMode = False
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    Range("B4").Select
+    ActiveCell.FormulaR1C1 = "Qty"
+    Range("B5").Select
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-1],MailP1!C[-1]:C,2,0)"
+    Range("B5").Select
+    Selection.Copy
+    Range("A5").Select
+    Selection.End(xlDown).Select
+    Range("C7").Select
+    Selection.End(xlDown).Select
+    Range("B34").Select
+    Range(Selection, Selection.End(xlUp)).Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Selection.End(xlUp).Select
+    Rows("4:4").Select
+    Application.CutCopyMode = False
+    Selection.AutoFilter
+    Range("B5").Select
+    ActiveSheet.Range("$A$4:$H$35").AutoFilter Field:=2, Criteria1:="#N/A"
+    Range("B6").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.ClearContents
+    ActiveSheet.ShowAllData
+    ActiveWindow.SmallScroll Down:=-12
+    Range("B8").Select
+    ActiveWindow.SmallScroll Down:=27
+    Rows("35:35").Select
+    Selection.Delete Shift:=xlUp
+    ActiveWindow.SmallScroll Down:=-51
+    Range("L11").Select
+    Sheets("MailP1").Select
+    Range("C3").Select
+    ActiveCell.FormulaR1C1 = "Remarks"
+    Range("C4").Select
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-2],Sheet7!C[-2],1,0)"
+    Range("C4").Select
+    Selection.Copy
+    Range("B4").Select
+    Selection.End(xlDown).Select
+    Range("C14").Select
+    Range(Selection, Selection.End(xlUp)).Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    Rows("14:14").Select
+    Selection.Delete Shift:=xlUp
+    Range("D15").Select
+    ActiveWindow.SmallScroll Down:=-6
+    Rows("3:3").Select
+    Selection.AutoFilter
+    Range("C5").Select
+    ActiveSheet.Range("$A$3:$C$13").AutoFilter Field:=3, Criteria1:="#N/A"
+    Range("C7").Select
+    ActiveCell.FormulaR1C1 = "CTB Clear"
+    Range("C7").Select
+    Selection.Copy
+    Range("C8").Select
+    ActiveSheet.Paste
+    ActiveSheet.Range("$A$3:$C$13").AutoFilter Field:=3, Criteria1:=Array( _
+        "HPM-CQ114-67017-FG-J", "HPM-CQ114-67089-FG-J", "HPM-CZ056-67461-FG-J", _
+        "HPM-K0Q45-67319-MR-FG-J", "HPM-K0Q45-67320-MR-FG-J", "HPM-K0Q45-67321-MR-FG-J", _
+        "HPM-K0Q45-67355-MR-FG-J", "HPM-K0Q46-67090-MR-FG-J"), Operator:= _
+        xlFilterValues
+    Range("C4").Select
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = "AOS"
+    Range("C4").Select
+    Selection.Copy
+    Range("B4").Select
+    Selection.End(xlDown).Select
+    Range("C13").Select
+    Range(Selection, Selection.End(xlUp)).Select
+    Range("C4:C13").Select
+    Range("C13").Activate
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    ActiveSheet.ShowAllData
+    Range("K7").Select
+    Selection.AutoFilter
+    ActiveWorkbook.Save
+End Sub

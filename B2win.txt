@@ -1,0 +1,118 @@
+
+Sub processingofb2win()
+Sheets("b2win").Select
+    Cells.Select
+    Selection.Replace What:=" ", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    Rows("1:1").Select
+    Application.CutCopyMode = False
+    Selection.AutoFilter
+    Selection.AutoFilter Field:=5, Criteria1:="<>Purch" _
+        , Operator:=xlAnd
+Sheets("b2win").Select
+     Lst = Cells(Rows.Count, 2).End(xlUp).Row
+    If Lst > 2 Then
+    Rows("2:" & Lst).Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Delete Shift:=xlUp
+    End If
+      Selection.AutoFilter
+      
+      Columns("D:E").Select
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    
+    Range("D1").Select
+    ActiveCell.FormulaR1C1 = "supplier"
+    Range("E1").Select
+    ActiveCell.FormulaR1C1 = "buyers"
+    Range("D2").Select
+    Application.CutCopyMode = False
+    Application.CutCopyMode = False
+     Range("D2").Select
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-1],ISI!C[-3]:C[10],14,0)"
+    Range("E2").Select
+    Application.CutCopyMode = False
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-2],ISI!C[-4]:C[6],11,0)"
+    Sheets("b2win").Select
+    Lst = Cells(Rows.Count, 2).End(xlUp).Row
+    Range("D2:E2").Select
+    Selection.Copy
+    Range("D2:E" & Lst).Select
+    ActiveSheet.Paste
+    
+    Columns("D:E").Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+         Columns("E:E").Select
+    Application.CutCopyMode = False
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+  
+  Range("E2").Select
+    Application.CutCopyMode = False
+    Application.CutCopyMode = False
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-1],JIT!C[-4],1,0)"
+    Range("E2").Select
+    Selection.Copy
+    Range("E2:E" & Lst).Select
+    ActiveSheet.Paste
+     Range("E2:E" & Lst).Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Rows("1:1").Select
+    Application.CutCopyMode = False
+    Selection.AutoFilter
+    Selection.AutoFilter Field:=5, Criteria1:="<>#N/A", Operator:=xlFilterValues
+   If Lst > 2 Then
+    Rows("2:" & Lst).Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Delete Shift:=xlUp
+    End If
+      Selection.AutoFilter
+      
+  Columns("E:E").Select
+    Selection.Delete Shift:=xlToLeft
+     ActiveWorkbook.Worksheets("b2win").AutoFilter.Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("b2win").AutoFilter.Sort.SortFields.Add2 Key:=Range _
+        ("C1"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+        xlSortNormal
+    With ActiveWorkbook.Worksheets("b2win").AutoFilter.Sort
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    Sheets("b2win").Select
+ Lst = Cells(Rows.Count, 2).End(xlUp).Row
+    Range("M2").Select
+    ActiveCell.FormulaR1C1 = "=RC[-1]-RC[-4]"
+    Range("M3").Select
+    ActiveCell.FormulaR1C1 = "=IF(RC[-10]=R[-1]C[-10],R[-1]C-RC[-4],RC[-1]-RC[-4])"
+    Range("M3").Select
+    Selection.Copy
+    Range("M3:M" & Lst).Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    Columns("M:M").Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Range("M3").Select
+    Selection.AutoFilter Field:=13, Criteria1:=">=0", _
+        Operator:=xlAnd
+    Rows("2:2").Select
+    If Lst > 3 Then
+    Rows("2:" & Lst).Select
+    Selection.SpecialCells(xlCellTypeVisible).Select
+    Selection.Delete Shift:=xlUp
+    End If
+    ActiveWorkbook.Worksheets("b2win").AutoFilter.Sort.SortFields.Clear
+    ActiveSheet.ShowAllData
+
+    
+end

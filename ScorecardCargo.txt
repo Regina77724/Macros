@@ -1,0 +1,57 @@
+Sub process()
+
+Dim Wb As Workbook
+Dim Wb1 As Workbook
+Dim Wb2 As Workbook
+Dim sht As Worksheet
+Dim rngA As Range
+Dim cell As Range
+Dim rngDateHeader As Range
+Dim rngHeaders As Range
+Dim ColName As Integer
+
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+Set Wb = ActiveWorkbook
+MsgBox "Please open the ScoreCard which you want to update", vbOKOnly
+Workbooks.Open Application.GetOpenFilename
+
+Set Wb1 = ActiveWorkbook
+Filename = ActiveWorkbook.Name
+baseFileName = Left(Filename, InStr(Filename, ".") - 1)
+
+
+MsgBox "Please open your Updated OTD File", vbOKOnly
+Workbooks.Open Application.GetOpenFilename
+Set Wb2 = ActiveWorkbook
+
+Wb2.Sheets(baseFileName).Select
+Cells.Select
+Selection.Copy
+Wb1.Activate
+
+Sheets.Add(, Sheets(Sheets.Count)).Name = "RawInput"
+Selection.PasteSpecial Paste:=xlPasteValuesAndNumberFormats, Operation:= _
+        xlNone, SkipBlanks:=False, Transpose:=False
+Wb2.Close savechanges = False
+Sheets("RawInput").Select
+Lst = Cells(Rows.Count, 2).End(xlUp).Row
+
+Set rngHeaders = Range("1:1") 'Looks in entire first row; adjust as needed.
+Set rngDateHeader = rngHeaders.Find("Consignee city")
+
+
+ColName = rngDateHeader.Column
+If Not rngDateHeader Is Nothing Then
+For i = 2 To Lst
+J = Worksheets("Cargo Rep IN").Range("A9000").End(xlUp).Row
+If Sheets("RawInput").Cells(i, ColName).Value = "TIMISOARA" Then
+
+Sheets("RawInput").Cells(i, ColName).EntireRow.Copy Destination:=Worksheets("Cargo Rep IN").Range("A" & J + 1)
+Else
+K = Worksheets("Cargo Rep Out").Range("A9000").End(xlUp).Row
+Sheets("RawInput").Cells(i, ColName).EntireRow.Copy Destination:=Worksheets("Cargo Rep Out").Range("A" & K + 1)
+End If
+Next i
+End If
+End Sub
